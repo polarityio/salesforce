@@ -1,0 +1,98 @@
+{
+    "imposters": [
+        {
+            "port": 5555,
+            "protocol": "https",
+            "name": "origin",
+            "stubs": [
+                {
+                    "predicates": [
+                        {
+                            "equals": {
+                                "path": "/services/oauth2/token",
+                                "body": {
+                                    "grant_type": "",
+                                    "client_id": "",
+                                    "client_secret": "",
+                                    "username": "",
+                                    "password": ""
+                                }
+                            }
+                        }
+                    ],
+                    "responses": [
+                        {
+                            "is": {
+                                "body": {
+                                    "access_token": "access_token_contents",
+                                    "instance_url": "https://na50.salesforce.com",
+                                    "__comment": "^ this might be necessary for redirection?",
+                                    "id": "probably don't need this",
+                                    "token_type": "Bearer",
+                                    "issued_at": "or this",
+                                    "signature": "definately not this"
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "predicates": [
+                        {
+                            "equals": {
+                                "path": "/services/data/v20.0/search",
+                                "query": {
+                                    "q": "Find {Joe}"
+                                }
+                            },
+                            "contains": {
+                                "headers": {
+                                    "Authorization": "Bearer access_token_contents"
+                                }
+                            }
+                        }
+                    ],
+                    "responses": [
+                        {
+                            "is": {
+                                "body": [
+                                    {
+                                        "attributes": {
+                                            "type": "Opportunity",
+                                            "url": "/services/data/v20.0/sobjects/Opportunity/0066A000006GubJQAS"
+                                        },
+                                        "Id": "0066A000006GubJQAS"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "predicates": [
+                        {
+                            "equals": {
+                                "path": "/services/data/v20.0/search",
+                                "query": {
+                                    "q": "Find {Joe}"
+                                }
+                            },
+                            "contains": {
+                                "headers": {
+                                    "Authorization": "Bearer access_token_contents"
+                                }
+                            }
+                        }
+                    ],
+                    "responses": [
+                        {
+                            "is": {
+                                "body": {}
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
