@@ -23,7 +23,7 @@ module.exports = {
      * @optional
      */
     description: "TODO salesforce integration description",
-    entityTypes: [&#39;ipv4&#39;],
+    entityTypes: ['custom'],
     /**
      * An array of style files (css or less) that will be included for your integration. Any styles specified in
      * the below files can be used in your custom template.

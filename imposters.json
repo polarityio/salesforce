@@ -16,7 +16,8 @@
                                     "client_secret": "",
                                     "username": "",
                                     "password": ""
-                                }
+                                },
+                                "method": "POST"
                             }
                         }
                     ],
@@ -42,7 +43,7 @@
                             "equals": {
                                 "path": "/services/data/v20.0/search",
                                 "query": {
-                                    "q": "Find {Joe}"
+                                    "q": "Find {John Doe}"
                                 }
                             },
                             "contains": {
@@ -58,10 +59,10 @@
                                 "body": [
                                     {
                                         "attributes": {
-                                            "type": "Opportunity",
-                                            "url": "/services/data/v20.0/sobjects/Opportunity/0066A000006GubJQAS"
+                                            "type": "Contact",
+                                            "url": "/services/data/v20.0/sobjects/Contact/0036A00000OZQSEQA5"
                                         },
-                                        "Id": "0066A000006GubJQAS"
+                                        "Id": "0036A00000OZQSEQA5"
                                     }
                                 ]
                             }
@@ -74,7 +75,7 @@
                             "equals": {
                                 "path": "/services/data/v20.0/search",
                                 "query": {
-                                    "q": "Find {Joe}"
+                                    "q": "Find {Jane Moe}"
                                 }
                             },
                             "contains": {
@@ -87,7 +88,113 @@
                     "responses": [
                         {
                             "is": {
-                                "body": {}
+                                "body": [
+                                    {
+                                        "attributes": {
+                                            "type": "Contact",
+                                            "url": "/services/data/v20.0/sobjects/Contact/0036A00000OZQSEQA6"
+                                        },
+                                        "Id": "0036A00000OZQSEQA6"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "predicates": [
+                        {
+                            "equals": {
+                                "path": "/services/data/v20.0/sobjects/Contact/0036A00000OZQSEQA5"
+                            },
+                            "contains": {
+                                "headers": {
+                                    "Authorization": "Bearer access_token_contents"
+                                }
+                            }
+                        }
+                    ],
+                    "responses": [
+                        {
+                            "is": {
+                                "body": {
+                                    "attributes": {
+                                        "type": "Contact",
+                                        "url": "/services/data/v20.0/sobjects/Contact/0036A00000OZQSEQA5"
+                                    },
+                                    "Id": "0036A00000OZQSEQA5",
+                                    "AccountId": "0016A00000KqABLQA3",
+                                    "LastName": "Doe",
+                                    "FirstName": "John",
+                                    "Salutation": "Mr.",
+                                    "Name": "John Doe",
+                                    "MailingStreet": "2334 N. Michigan Avenue, Suite 1500\nChicago, IL 60601, USA",
+                                    "Phone": "(312) 596-1000",
+                                    "Fax": "(312) 596-1500",
+                                    "MobilePhone": "(312) 596-1563",
+                                    "Email": "bond_john@grandhotels.com",
+                                    "Title": "VP, Facilities",
+                                    "Department": "Facilities",
+                                    "LeadSource": "External Referral",
+                                    "Birthdate": "1953-12-19",
+                                    "OwnerId": "0056A000001n2tBQAQ",
+                                    "CreatedDate": "2018-03-01T14:23:58.000+0000",
+                                    "CreatedById": "0056A000001n2tBQAQ",
+                                    "LastModifiedDate": "2018-03-01T14:23:58.000+0000",
+                                    "LastModifiedById": "0056A000001n2tBQAQ",
+                                    "SystemModstamp": "2018-03-01T14:23:58.000+0000",
+                                    "Level__c": "Primary",
+                                    "Languages__c": "English"
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "predicates": [
+                        {
+                            "equals": {
+                                "path": "/services/data/v20.0/sobjects/Contact/0036A00000OZQSEQA6"
+                            },
+                            "contains": {
+                                "headers": {
+                                    "Authorization": "Bearer access_token_contents"
+                                }
+                            }
+                        }
+                    ],
+                    "responses": [
+                        {
+                            "is": {
+                                "body": {
+                                    "attributes": {
+                                        "type": "Contact",
+                                        "url": "/services/data/v20.0/sobjects/Contact/0036A00000OZQSEQA6"
+                                    },
+                                    "Id": "0036A00000OZQSEQA6",
+                                    "AccountId": "0016A00000KqABLQA3",
+                                    "LastName": "Moe",
+                                    "FirstName": "Jane",
+                                    "Salutation": "Mr.",
+                                    "Name": "Jane Moe",
+                                    "MailingStreet": "2334 N. Michigan Avenue, Suite 1500\nChicago, IL 60601, USA",
+                                    "Phone": "(312) 596-1000",
+                                    "Fax": "(312) 596-1500",
+                                    "MobilePhone": "(312) 596-1563",
+                                    "Email": "bond_john@grandhotels.com",
+                                    "Title": "VP, Facilities",
+                                    "Department": "Facilities",
+                                    "LeadSource": "External Referral",
+                                    "Birthdate": "1953-12-19",
+                                    "OwnerId": "0056A000001n2tBQAQ",
+                                    "CreatedDate": "2018-03-01T14:23:58.000+0000",
+                                    "CreatedById": "0056A000001n2tBQAQ",
+                                    "LastModifiedDate": "2018-03-01T14:23:58.000+0000",
+                                    "LastModifiedById": "0056A000001n2tBQAQ",
+                                    "SystemModstamp": "2018-03-01T14:23:58.000+0000",
+                                    "Level__c": "Primary",
+                                    "Languages__c": "English"
+                                }
                             }
                         }
                     ]
