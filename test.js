@@ -20,25 +20,39 @@ describe('salesforce polarity integration', () => {
         });
 
         it('should look up a single contact', (done) => {
-            integration.doLookup([{ value: 'John Doe' }], {}, (err, result) => {
+            integration.doLookup([{ value: 'John Doe' }], { host: 'https://localhost:5555', authHost: 'https://localhost:5555' }, (err, result) => {
                 if (err) {
                     done(err);
                 }
 
                 assert.equal(1, result.length);
-                assert.equal("John Doe", result[0].Name);
+                assert.isOk(result[0].entity);
+                assert.equal("John Doe", result[0].entity.value);
+                assert.equal("John Doe", result[0].data.details.Name);
                 done();
             });
         });
 
         it('should look up multiple contacts', (done) => {
-            integration.doLookup([{ value: 'John Doe' }, { value: 'Jane Moe' }], {}, (err, result) => {
+            integration.doLookup([{ value: 'John Doe' }, { value: 'Jane Moe' }], { host: 'https://localhost:5555', authHost: 'https://localhost:5555' }, (err, result) => {
                 if (err) {
                     done(err);
                 }
 
-                assert.equal("John Doe", result[0].Name);
-                assert.equal("Jane Moe", result[1].Name);
+                assert.equal("John Doe", result[0].data.details.Name);
+                assert.equal("Jane Moe", result[1].data.details.Name);
+                done();
+            });
+        });
+
+        it('should handle multiple results for a contact match', (done) => {
+            integration.doLookup([{ value: 'John' }], { host: 'https://localhost:5555', authHost: 'https://localhost:5555' }, (err, result) => {
+                if (err) {
+                    done(err);
+                }
+
+                assert.equal("John Doe", result[0].data.details.Name);
+                assert.equal("John Johnston", result[1].data.details.Name);
                 done();
             });
         });

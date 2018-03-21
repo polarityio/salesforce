@@ -12,47 +12,89 @@ function getRequestOptions() {
 }
 
 function doLookup(entities, options, callback) {
+    Logger.trace({ options: options });
+
     let results = [];
+    let requestOptions = getRequestOptions();
+    requestOptions.url = (options.authHost ? options.authHost : 'https://login.salesforce.com') + '/services/oauth2/token';
+    requestOptions.method = 'POST';
+    requestOptions.form = {
+        grant_type: 'password',
+        client_id: options.clientId,
+        client_secret: options.clientSecret,
+        username: options.username,
+        password: options.password
+    };
 
-    async.each(entities, (entity, callback) => {
-        let id = entity.value;
-        let requestOptions = getRequestOptions();
-        requestOptions.url = 'https://localhost:5555/services/data/v20.0/search'
-        requestOptions.qs = {
-            q: 'Find {' + id + '}'
-        };
-        requestOptions.headers = {
-            Authorization: 'Bearer access_token_contents'
-        };
+    Logger.trace({ requestOptions: requestOptions });
 
-        request(requestOptions, (err, resp, body) => {
-            if (err) {
-                callback(err);
-                return;
-            }
+    request(requestOptions, (err, resp, body) => {
+        if (err || resp.statusCode != 200) {
+            Logger.error({ err: err, statusCode: resp.statusCode, body: body, options: requestOptions });
+            callback({ err: err, body: body });
+            return;
+        }
 
-            let link = 'https://localhost:5555' + body[0].attributes.url;
+        Logger.trace({ body: body });
+
+        let accessToken = body.access_token;
+
+        async.each(entities, (entity, callback) => {
+            let id = entity.value;
             requestOptions = getRequestOptions();
-            requestOptions.url = link;
+            requestOptions.url = options.host + '/services/data/v20.0/search'
+            requestOptions.qs = {
+                q: 'Find {' + id + '}'
+            };
             requestOptions.headers = {
-                Authorization: 'Bearer access_token_contents'
+                Authorization: `Bearer ${accessToken}`
             };
 
+            Logger.trace({ requestOptions: requestOptions });
+
             request(requestOptions, (err, resp, body) => {
-                if (err) {
-                    callback(err);
+                if (err || resp.statusCode != 200) {
+                    Logger.error({ err: err, statusCode: resp.statusCode, body: body, options: requestOptions });
+                    callback({ err: err, body: body });
                     return;
                 }
 
-                results.push(body);
-                callback();
-            });
-        });
-    }, err => {
-        callback(err, results);
-    });
+                Logger.trace({ body: body });
 
-    // callback(null, [{ Name: 'John Doe' }]);
+                if (body.length == 0) {
+                    results.push({ entity: entity, data: null });
+                    callback();
+                } else {
+                    async.each(body, (searchResult, callback) => {
+                        let link = options.host + searchResult.attributes.url;
+                        requestOptions = getRequestOptions();
+                        requestOptions.url = link;
+                        requestOptions.headers = {
+                            Authorization: `Bearer ${accessToken}`
+                        };
+
+                        Logger.trace({ requestOptions: requestOptions });
+
+                        request(requestOptions, (err, resp, body) => {
+                            if (err) {
+                                callback(err);
+                                return;
+                            }
+
+                            Logger.trace({ body: body });
+
+                            results.push({ entity: entity, data: { details: body } });
+                            callback();
+                        });
+                    }, err => {
+                        callback(err);
+                    });
+                }
+            });
+        }, err => {
+            callback(err, results);
+        });
+    });
 }
 
 function startup(logger) {
@@ -84,6 +126,7 @@ function startup(logger) {
 }
 
 function validateOptions(options, callback) {
+    Logger.trace({ options: options });
     callback(null, null);
 }
 

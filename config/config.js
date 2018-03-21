@@ -23,7 +23,7 @@ module.exports = {
      * @optional
      */
     description: "TODO salesforce integration description",
-    entityTypes: ['custom'],
+    entityTypes: ['email'],
     /**
      * An array of style files (css or less) that will be included for your integration. Any styles specified in
      * the below files can be used in your custom template.
@@ -90,7 +90,7 @@ module.exports = {
         // the directory you specify is writable by the `polarityd:polarityd` user and group.
 
         //directoryPath: '/var/log/polarity-integrations',
-        level: 'info',  //trace, debug, info, warn, error, fatal
+        level: 'trace',  //trace, debug, info, warn, error, fatal
     },
     /**
      * Options that are displayed to the user/admin in the Polarity integration user-interface.  Should be structured
@@ -101,11 +101,47 @@ module.exports = {
      */
     options: [
         {
-            key: "exampleKey",
-            name: "exampleName",
-            description: "example description of this option",
+            key: "host",
+            name: "host",
+            description: "host description",
             default: "",
             type: "text",
+            userCanEdit: false,
+            adminOnly: true
+        },
+        {
+            key: "clientId",
+            name: "client id",
+            description: "client id description",
+            default: "",
+            type: "text",
+            userCanEdit: false,
+            adminOnly: true
+        },
+        {
+            key: "clientSecret",
+            name: "client secret",
+            description: "client secret description",
+            default: "",
+            type: "password",
+            userCanEdit: false,
+            adminOnly: true
+        },
+        {
+            key: "username",
+            name: "username",
+            description: "username description",
+            default: "",
+            type: "text",
+            userCanEdit: false,
+            adminOnly: true
+        },
+        {
+            key: "password",
+            name: "password",
+            description: "password description",
+            default: "",
+            type: "password",
             userCanEdit: false,
             adminOnly: true
         }
