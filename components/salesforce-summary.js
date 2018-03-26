@@ -3,6 +3,6 @@ polarity.export = PolarityComponent.extend({
     tags: Ember.computed('block.data.details', function () {
         var details = this.get('block.data.details');
 
-        return [details.Name, details.Title, `M: ${details.MobilePhone}`].filter(entry => entry);
+        return [details.Name, details.Title, details.MobilePhone].filter(entry => entry);
     })
 });

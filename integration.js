@@ -83,6 +83,8 @@ function doLookup(entities, options, callback) {
 
                             Logger.trace({ body: body });
 
+                            body.host = options.host;
+
                             results.push({ entity: entity, data: { details: body } });
                             callback();
                         });
@@ -92,6 +94,7 @@ function doLookup(entities, options, callback) {
                 }
             });
         }, err => {
+            Logger.trace({ results: results });
             callback(err, results);
         });
     });

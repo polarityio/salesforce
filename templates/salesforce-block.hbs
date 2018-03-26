@@ -1,23 +1,90 @@
 <div class="details-container">
     <div class="item">
-        <p>
-            Name:
-            <b>{{details.Name}}</b>
-        </p>
-        <p>
-            Title:
-            <b>{{details.Title}}</b>
-        </p>
-        <p>
-            Contact:
-            <ul>
-                {{#each contacts as |contact|}}
-                <li>
-                    <b>{{contact.type}}:</b>
-                    {{contact.value}}
-                </li>
-                {{/each}}
-            </ul>
-        </p>
+        {{#if isContact}}
+        <div>
+            <p>
+                <i>{{details.Name}}</i>
+                <a href="{{details.host}}/one/one.app#/sObject/0066A000006GubJQAS/view">View in Salesforce</a>
+            </p>
+            <p>
+                Title:
+                <b>{{details.Title}}</b>
+            </p>
+            <p>
+                Contact:
+                <ul>
+                    {{#each contacts as |contact|}}
+                    <li>
+                        <b>{{contact.type}}:</b>
+                        {{contact.value}}
+                    </li>
+                    {{/each}}
+                </ul>
+            </p>
+            <p>
+                Department:
+                <b>{{details.Department}}</b>
+            </p>
+            <p>
+
+            </p>
+        </div>
+        {{/if}} {{#if isLead}}
+        <div>
+            <p>
+                <i>{{details.Name}}</i>
+                <a href="{{details.host}}/one/one.app#/sObject/0066A000006GubJQAS/view">View in Salesforce</a>
+            </p>
+            <p>
+                Title:
+                <b>{{details.Title}}</b>
+            </p>
+            <p>
+                Contact:
+                <ul>
+                    {{#each contacts as |contact|}}
+                    <li>
+                        <b>{{contact.type}}:</b>
+                        {{contact.value}}
+                    </li>
+                    {{/each}}
+                </ul>
+            </p>
+            <p>
+                Company:
+                <b>{{details.Company}}</b>
+            </p>
+            <p>
+                Status:
+                <b>{{details.Status}}</b>
+            </p>
+            <p>
+                Source:
+                <b>{{details.LeadSource}}</b>
+            </p>
+        </div>
+        {{/if}}{{#if isOpportunity}}
+        <div>
+            <p>
+                <i>{{details.Name}}</i>
+                <a href="{{details.host}}/one/one.app#/sObject/0066A000006GubJQAS/view">View in Salesforce</a>
+            </p>
+            <p>
+                <i>{{details.Description}}</i>
+            </p>
+            <p>
+                Stage:
+                <b>{{details.StageName}}</b>
+            </p>
+            <p>
+                Next Step:
+                <b>{{details.NextStep}}</b>
+            </p>
+            <p>
+                Expected Revenue:
+                <b>{{details.ExpectedRevenue}}</b>
+            </p>
+        </div>
+        {{/if}}
     </div>
 </div>

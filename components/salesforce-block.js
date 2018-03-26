@@ -10,5 +10,14 @@ polarity.export = PolarityComponent.extend({
             { type: 'Email', value: details.Email },
             { type: 'Mailing Address', value: details.MailingStreet },
         ].filter(entry => entry.value);
+    }),
+    isContact: Ember.computed('block.data.details', function () {
+        return this.get('block.data.details').attributes.type === "Contact";
+    }),
+    isLead: Ember.computed('block.data.details', function () {
+        return this.get('block.data.details').attributes.type === "Lead";
+    }),
+    isOpportunity: Ember.computed('block.data.details', function () {
+        return this.get('block.data.details').attributes.type === "Opportunity";
     })
 });
