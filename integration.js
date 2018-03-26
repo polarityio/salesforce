@@ -44,7 +44,7 @@ function doLookup(entities, options, callback) {
             requestOptions = getRequestOptions();
             requestOptions.url = options.host + '/services/data/v20.0/search'
             requestOptions.qs = {
-                q: 'Find {' + id + '}'
+                q: 'Find {"' + id.replace(/\-/g, '\\-') + '"}'
             };
             requestOptions.headers = {
                 Authorization: `Bearer ${accessToken}`
