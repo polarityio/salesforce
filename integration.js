@@ -16,7 +16,7 @@ function doLookup(entities, options, callback) {
 
     let results = [];
     let requestOptions = getRequestOptions();
-    requestOptions.url = (options.authHost ? options.authHost : 'https://login.salesforce.com') + '/services/oauth2/token';
+    requestOptions.url = options.host + '/services/oauth2/token';
     requestOptions.method = 'POST';
     requestOptions.form = {
         grant_type: 'password',
