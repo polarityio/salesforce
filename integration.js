@@ -1,21 +1,18 @@
 let async = require('async');
 let request = require('request');
 let config = require('./config/config');
+let requestWithDefaults;
 
 let Logger;
 let requestOptions = {
     json: true
 };
 
-function getRequestOptions() {
-    return JSON.parse(JSON.stringify(requestOptions));
-}
-
 function doLookup(entities, options, callback) {
     Logger.trace({ options: options });
 
     let results = [];
-    let requestOptions = getRequestOptions();
+    let requestOptions = {};
     requestOptions.url = options.host + '/services/oauth2/token';
     requestOptions.method = 'POST';
     requestOptions.form = {
@@ -28,7 +25,7 @@ function doLookup(entities, options, callback) {
 
     Logger.trace({ requestOptions: requestOptions });
 
-    request(requestOptions, (err, resp, body) => {
+    requestWithDefaults(requestOptions, (err, resp, body) => {
         if (err || resp.statusCode != 200) {
             Logger.error({ err: err, statusCode: resp.statusCode, body: body, options: requestOptions });
             callback({ err: err, body: body });
@@ -41,10 +38,10 @@ function doLookup(entities, options, callback) {
 
         async.each(entities, (entity, callback) => {
             let id = entity.value;
-            requestOptions = getRequestOptions();
+            requestOptions = {};
             requestOptions.url = options.host + '/services/data/v20.0/search'
             requestOptions.qs = {
-                q: 'Find {"' + id.replace(/\-/g, '\\-') + '"}'
+                q: 'Find {"' + id.replace(/\-/g, '\\-') + '"}' // Salesforce API blows up on unescaped dashes
             };
             requestOptions.headers = {
                 Authorization: `Bearer ${accessToken}`
@@ -52,7 +49,7 @@ function doLookup(entities, options, callback) {
 
             Logger.trace({ requestOptions: requestOptions });
 
-            request(requestOptions, (err, resp, body) => {
+            requestWithDefaults(requestOptions, (err, resp, body) => {
                 if (err || resp.statusCode != 200) {
                     Logger.error({ err: err, statusCode: resp.statusCode, body: body, options: requestOptions });
                     callback({ err: err, body: body });
@@ -67,7 +64,7 @@ function doLookup(entities, options, callback) {
                 } else {
                     async.each(body, (searchResult, callback) => {
                         let link = options.host + searchResult.attributes.url;
-                        requestOptions = getRequestOptions();
+                        requestOptions = {};
                         requestOptions.url = link;
                         requestOptions.headers = {
                             Authorization: `Bearer ${accessToken}`
@@ -75,7 +72,7 @@ function doLookup(entities, options, callback) {
 
                         Logger.trace({ requestOptions: requestOptions });
 
-                        request(requestOptions, (err, resp, body) => {
+                        requestWithDefaults(requestOptions, (err, resp, body) => {
                             if (err) {
                                 callback(err);
                                 return;
@@ -126,6 +123,8 @@ function startup(logger) {
     if (typeof config.request.rejectUnauthorized === 'boolean') {
         requestOptions.rejectUnauthorized = config.request.rejectUnauthorized;
     }
+
+    requestWithDefaults = request.defaults(requestOptions);
 }
 
 function validateOptions(options, callback) {

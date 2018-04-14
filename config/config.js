@@ -5,7 +5,7 @@ module.exports = {
      * @type String
      * @required
      */
-    name: "salesforce",
+    name: "Salesforce",
     /**
      * The acronym that appears in the notification window when information from this integration
      * is displayed.  Note that the acronym is included as part of each "tag" in the summary information
@@ -22,8 +22,8 @@ module.exports = {
      * @type String
      * @optional
      */
-    description: "TODO salesforce integration description",
-    entityTypes: ['email'],
+    description: "Salesforce provides an interface for case and task management, and routing and escalating important events.",
+    entityTypes: ['string', 'email'],
     /**
      * An array of style files (css or less) that will be included for your integration. Any styles specified in
      * the below files can be used in your custom template.
@@ -90,7 +90,7 @@ module.exports = {
         // the directory you specify is writable by the `polarityd:polarityd` user and group.
 
         //directoryPath: '/var/log/polarity-integrations',
-        level: 'trace',  //trace, debug, info, warn, error, fatal
+        level: 'info',  //trace, debug, info, warn, error, fatal
     },
     /**
      * Options that are displayed to the user/admin in the Polarity integration user-interface.  Should be structured
@@ -102,8 +102,8 @@ module.exports = {
     options: [
         {
             key: "host",
-            name: "host",
-            description: "host description",
+            name: "Host",
+            description: "Hostname of the Salesforce instance to use",
             default: "",
             type: "text",
             userCanEdit: false,
@@ -111,8 +111,8 @@ module.exports = {
         },
         {
             key: "clientId",
-            name: "client id",
-            description: "client id description",
+            name: "Client ID",
+            description: "The Client ID for the connected app",
             default: "",
             type: "text",
             userCanEdit: false,
@@ -120,8 +120,8 @@ module.exports = {
         },
         {
             key: "clientSecret",
-            name: "client secret",
-            description: "client secret description",
+            name: "Client Secret",
+            description: "The Client Secret for the connected app",
             default: "",
             type: "password",
             userCanEdit: false,
@@ -129,8 +129,8 @@ module.exports = {
         },
         {
             key: "username",
-            name: "username",
-            description: "username description",
+            name: "Username",
+            description: "The user's username",
             default: "",
             type: "text",
             userCanEdit: false,
@@ -138,8 +138,8 @@ module.exports = {
         },
         {
             key: "password",
-            name: "password",
-            description: "password description",
+            name: "Password",
+            description: "The user's password plus the security token (e.g. so for a password \"password\" and security token \"12345\" then the value in this field should be \"password12345\")",
             default: "",
             type: "password",
             userCanEdit: false,
