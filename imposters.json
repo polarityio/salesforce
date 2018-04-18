@@ -75,6 +75,38 @@
                             "equals": {
                                 "path": "/services/data/v20.0/search",
                                 "query": {
+                                    "q": "Find {\"Bad entity\"}"
+                                }
+                            },
+                            "contains": {
+                                "headers": {
+                                    "Authorization": "Bearer access_token_contents"
+                                }
+                            }
+                        }
+                    ],
+                    "responses": [
+                        {
+                            "is": {
+                                "body": [
+                                    {
+                                        "attributes": {
+                                            "type": "Contact",
+                                            "url": "/services/data/v20.0/sobjects/Contact/1234"
+                                        },
+                                        "Id": "1234"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "predicates": [
+                        {
+                            "equals": {
+                                "path": "/services/data/v20.0/search",
+                                "query": {
                                     "q": "Find {\"John\"}"
                                 }
                             },

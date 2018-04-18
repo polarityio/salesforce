@@ -27,8 +27,7 @@ function doLookup(entities, options, callback) {
 
     requestWithDefaults(requestOptions, (err, resp, body) => {
         if (err || resp.statusCode != 200) {
-            Logger.error({ err: err, statusCode: resp.statusCode, body: body, options: requestOptions });
-            callback({ err: err, body: body });
+            callback({ error: err });
             return;
         }
 
@@ -73,8 +72,8 @@ function doLookup(entities, options, callback) {
                         Logger.trace({ requestOptions: requestOptions });
 
                         requestWithDefaults(requestOptions, (err, resp, body) => {
-                            if (err) {
-                                callback(err);
+                            if (err || resp.statusCode != 200) {
+                                callback(err || new Error(`http response code: ${resp.statusCode}`));
                                 return;
                             }
 

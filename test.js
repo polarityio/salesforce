@@ -58,6 +58,29 @@ describe('salesforce polarity integration', () => {
         });
     });
 
+    describe('error handling', () => {
+        it('should handle authentication errors', (done) => {
+            integration.doLookup([{ value: 'John Doe' }], { host: 'https://localhost:4444', authHost: 'https://localhost:4444' }, (err, result) => {
+                assert.ok(err);
+                done();
+            });
+        });
+
+        it('should handle search errors', (done) => {
+            integration.doLookup([{ value: 'value that doesnt exist' }], { host: 'https://localhost:5555', authHost: 'https://localhost:5555' }, (err, result) => {
+                assert.ok(err);
+                done();
+            });
+        });
+
+        it('should handle errors on result lookup', (done) => {
+            integration.doLookup([{ value: 'bad entity' }], { host: 'https://localhost:5555', authHost: 'https://localhost:5555' }, (err, result) => {
+                assert.ok(err);
+                done();
+            });
+        });
+    });
+
     xit('should display matching opportunities', () => {
 
     });
