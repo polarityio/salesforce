@@ -47,7 +47,7 @@ function doLookup(entities, options, callback) {
                 Authorization: `Bearer ${accessToken}`
             };
 
-            Logger.trace({ requestOptions: requestOptions });
+            Logger.trace('Request options to be sent', { requestOptions: requestOptions });
 
             requestWithDefaults(requestOptions, (err, resp, body) => {
                 if (err || resp.statusCode != 200) {
@@ -56,7 +56,7 @@ function doLookup(entities, options, callback) {
                     return;
                 }
 
-                Logger.trace({ body: body });
+                Logger.trace('Response from server', { body: body });
 
                 if (body.length == 0) {
                     results.push({ entity: entity, data: null });
