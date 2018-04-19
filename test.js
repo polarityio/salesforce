@@ -81,6 +81,42 @@ describe('salesforce polarity integration', () => {
         });
     });
 
+    describe('integration options', () => {
+        describe('validate options', () => {
+            let baseOptions = {
+                host: { value: 'asdf' },
+                clientId: { value: 'asdf' },
+                clientSecret: { value: 'asdf' },
+                username: { value: 'asdf' },
+                password: { value: 'asdf' },
+            };
+
+            it('should accept valid options', (done) => {
+                integration.validateOptions(baseOptions, (_, errors) => {
+                    assert.equal(0, errors.length);
+                    done();
+                });
+            });
+
+            [{ key: 'host' },
+            { key: 'clientId', name: 'client id' },
+            { key: 'clientSecret', name: 'client secret' },
+            { key: 'username' },
+            { key: 'password' }
+            ].forEach((option) => {
+                it(`should reject invalid ${option.key}s`, (done) => {
+                    options = JSON.parse(JSON.stringify(baseOptions));
+                    options[option.key] = '';
+                    integration.validateOptions(options, (_, errors) => {
+                        assert.equal(1, errors.length);
+                        assert.include(errors[0].message, option.name ? option.name : option.key);
+                        done();
+                    });
+                });
+            });
+        });
+    });
+
     xit('should display matching opportunities', () => {
 
     });

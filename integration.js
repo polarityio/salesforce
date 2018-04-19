@@ -126,9 +126,28 @@ function startup(logger) {
     requestWithDefaults = request.defaults(requestOptions);
 }
 
+function validateOption(errors, options, optionName, errMessage) {
+    if (typeof options[optionName].value !== 'string' ||
+        (typeof options[optionName].value === 'string' && options[optionName].value.length === 0)) {
+        errors.push({
+            key: optionName,
+            message: errMessage
+        });
+    }
+}
+
 function validateOptions(options, callback) {
     Logger.trace({ options: options });
-    callback(null, null);
+
+    let errors = [];
+
+    validateOption(errors, options, 'host', 'You must provide a valid host for the Salesforce instance.');
+    validateOption(errors, options, 'clientId', 'You must provide a valid client id for the Salesforce instance.');
+    validateOption(errors, options, 'clientSecret', 'You must provide a valid client secret for the Salesforce instance.');
+    validateOption(errors, options, 'username', 'You must provide a valid username for the Salesforce instance.');
+    validateOption(errors, options, 'password', 'You must provide a valid password + security token for the Salesforce instance.');
+
+    callback(null, errors);
 }
 
 module.exports = {
