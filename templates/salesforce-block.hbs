@@ -6,10 +6,12 @@
                 <i>{{details.Name}}</i>
                 <a href="{{details.host}}/one/one.app#/sObject/{{details.Id}}/view">View in Salesforce</a>
             </p>
+            {{#if hasTitle}}
             <p>
                 Title:
                 <b>{{details.Title}}</b>
             </p>
+            {{/if}} {{#if hasContact}}
             <p>
                 Contact:
                 <ul>
@@ -21,13 +23,12 @@
                     {{/each}}
                 </ul>
             </p>
+            {{/if}} {{#if hasDepartment}}
             <p>
                 Department:
                 <b>{{details.Department}}</b>
             </p>
-            <p>
-
-            </p>
+            {{/if}}
         </div>
         {{/if}} {{#if isLead}}
         <div>
@@ -35,10 +36,12 @@
                 <i>{{details.Name}}</i>
                 <a href="{{details.host}}/one/one.app#/sObject/{{details.Id}}/view">View in Salesforce</a>
             </p>
+            {{#if hasTitle}}
             <p>
                 Title:
                 <b>{{details.Title}}</b>
             </p>
+            {{/if}} {{#if hasContact}}
             <p>
                 Contact:
                 <ul>
@@ -50,40 +53,49 @@
                     {{/each}}
                 </ul>
             </p>
+            {{/if}} {{#if hasCompany}}
             <p>
                 Company:
                 <b>{{details.Company}}</b>
             </p>
+            {{/if}} {{#if hasStatus}}
             <p>
                 Status:
                 <b>{{details.Status}}</b>
             </p>
+            {{/if}} {{#if hasSource}}
             <p>
                 Source:
                 <b>{{details.LeadSource}}</b>
             </p>
+            {{/if}}
         </div>
-        {{/if}}{{#if isOpportunity}}
+        {{/if}} {{#if isOpportunity}}
         <div>
             <p>
                 <i>{{details.Name}}</i>
                 <a href="{{details.host}}/one/one.app#/sObject/{{details.Id}}/view">View in Salesforce</a>
             </p>
+            {{#if hasDescription}}
             <p>
                 <i>{{details.Description}}</i>
             </p>
+            {{/if}} {{#if hasStage}}
             <p>
                 Stage:
                 <b>{{details.StageName}}</b>
             </p>
+            {{/if}} {{#if hasNextStep}}
             <p>
                 Next Step:
                 <b>{{details.NextStep}}</b>
             </p>
+            {{/if}} {{#if hasExpectedRevenue}}
             <p>
                 Expected Revenue:
                 <b>{{details.ExpectedRevenue}}</b>
             </p>
+            {{/if}}
         </div>
         {{/if}}
     </div>
