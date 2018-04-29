@@ -1,5 +1,6 @@
 let assert = require('chai').assert;
 let integration = require('./integration');
+let escape = require('./escape');
 let config = require('./config/config');
 let bunyan = require('bunyan');
 config.request.rejectUnauthorized = false;
@@ -114,6 +115,30 @@ describe('salesforce polarity integration', () => {
                     });
                 });
             });
+        });
+    });
+
+    describe('escaped characters', () => {
+        it('should escape all necessary characters', () => {
+            assert.equal('\\-', escape('-'));
+            assert.equal('\\\\&', escape('&'));
+            assert.equal('\\\\?', escape('?'));
+            assert.equal('\\\\|', escape('|'));
+            assert.equal('\\\\!', escape('!'));
+            assert.equal('\\\\{', escape('{'));
+            assert.equal('\\\\}', escape('}'));
+            assert.equal('\\\\[', escape('['));
+            assert.equal('\\\\]', escape(']'));
+            assert.equal('\\\\(', escape('('));
+            assert.equal('\\\\)', escape(')'));
+            assert.equal('\\\\^', escape('^'));
+            assert.equal('\\\\~', escape('~'));
+            assert.equal('\\\\*', escape('*'));
+            assert.equal('\\\\:', escape(':'));
+            assert.equal('\\\\', escape('\\'));
+            assert.equal('\\"', escape('"'));
+            assert.equal("\\'", escape("'"));
+            assert.equal('\\+', escape('+'));
         });
     });
 

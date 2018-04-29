@@ -1,6 +1,7 @@
 let async = require('async');
 let request = require('request');
 let config = require('./config/config');
+let escape = require('./escape');
 let requestWithDefaults;
 
 let Logger;
@@ -40,7 +41,7 @@ function doLookup(entities, options, callback) {
             requestOptions = {};
             requestOptions.url = options.host + '/services/data/v20.0/search'
             requestOptions.qs = {
-                q: 'Find {"' + id.replace(/\-/g, '\\-') + '"}' // Salesforce API blows up on unescaped dashes
+                q: 'Find {"' + escape(id) + '"}'
             };
             requestOptions.headers = {
                 Authorization: `Bearer ${accessToken}`
