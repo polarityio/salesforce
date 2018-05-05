@@ -6,11 +6,12 @@ let requestWithDefaults;
 
 let Logger;
 let requestOptions = {
-    json: true
+    json: true,
+    followRedirect: true
 };
 
 function doLookup(entities, options, callback) {
-    Logger.trace({ options: options });
+    Logger.trace('Entity options', options);
 
     let results = [];
     let requestOptions = {};
@@ -24,15 +25,16 @@ function doLookup(entities, options, callback) {
         password: options.password
     };
 
-    Logger.trace({ requestOptions: requestOptions });
+    Logger.trace('Request options', requestOptions);
 
     requestWithDefaults(requestOptions, (err, resp, body) => {
         if (err || resp.statusCode != 200) {
+            Logger.error('Error getting token', { error: err, statusCode: resp ? resp.statusCode : undefined, body: body });
             callback({ error: err });
             return;
         }
 
-        Logger.trace({ body: body });
+        Logger.trace('Response body', { body: body });
 
         let accessToken = body.access_token;
 
