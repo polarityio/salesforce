@@ -34,6 +34,12 @@ function getToken(options, callback) {
     });
 }
 
+// Credit: https://stackoverflow.com/a/46181
+function validEmail(email) {
+    let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+}
+
 function doLookup(entities, options, callback) {
     Logger.trace('Entity options', options);
 
@@ -47,6 +53,12 @@ function doLookup(entities, options, callback) {
         }
 
         async.each(entities, (entity, callback) => {
+            if (entity.isEmail && !validEmail(entity.value)) {
+                Logger.trace('Skipping email because it fails validation', entity.value);
+                callback();
+                return;
+            }
+
             let id = entity.value;
             requestOptions = {};
             requestOptions.url = options.host + '/services/data/v20.0/search'
