@@ -10,13 +10,7 @@
                         {
                             "equals": {
                                 "path": "/services/oauth2/token",
-                                "body": {
-                                    "grant_type": "",
-                                    "client_id": "",
-                                    "client_secret": "",
-                                    "username": "",
-                                    "password": ""
-                                },
+                                "body": "grant_type=password&client_id=asdf&client_secret=asdf&username=asdf&password=asdf",
                                 "method": "POST"
                             }
                         }

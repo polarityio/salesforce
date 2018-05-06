@@ -10,10 +10,7 @@ let requestOptions = {
     followRedirect: true
 };
 
-function doLookup(entities, options, callback) {
-    Logger.trace('Entity options', options);
-
-    let results = [];
+function getToken(options, callback) {
     let requestOptions = {};
     requestOptions.url = options.host + '/services/oauth2/token';
     requestOptions.method = 'POST';
@@ -25,18 +22,29 @@ function doLookup(entities, options, callback) {
         password: options.password
     };
 
-    Logger.trace('Request options', requestOptions);
+    Logger.trace('Token request options', requestOptions);
 
     requestWithDefaults(requestOptions, (err, resp, body) => {
         if (err || resp.statusCode != 200) {
-            Logger.error('Error getting token', { error: err, statusCode: resp ? resp.statusCode : undefined, body: body });
-            callback({ error: err });
+            callback(err || new Error(`response status: ${resp.statusCode}`));
             return;
         }
 
-        Logger.trace('Response body', { body: body });
+        callback(null, body.access_token);
+    });
+}
 
-        let accessToken = body.access_token;
+function doLookup(entities, options, callback) {
+    Logger.trace('Entity options', options);
+
+    let results = [];
+
+    getToken(options, (err, accessToken) => {
+        if (err) {
+            Logger.error('Error getting token', { error: err });
+            callback(err);
+            return
+        }
 
         async.each(entities, (entity, callback) => {
             let id = entity.value;
@@ -130,7 +138,7 @@ function startup(logger) {
 }
 
 function validateOption(errors, options, optionName, errMessage) {
-    if (typeof options[optionName].value !== 'string' ||
+    if (!options[optionName] || typeof options[optionName].value !== 'string' ||
         (typeof options[optionName].value === 'string' && options[optionName].value.length === 0)) {
         errors.push({
             key: optionName,
@@ -139,8 +147,19 @@ function validateOption(errors, options, optionName, errMessage) {
     }
 }
 
+function validateCanLogin(options, callback) {
+    let opts = {};
+    for (let k in options) {
+        opts[k] = options[k].value;
+    }
+
+    getToken(opts, (err) => {
+        callback(err);
+    });
+}
+
 function validateOptions(options, callback) {
-    Logger.trace({ options: options });
+    Logger.trace('Options to validate', options);
 
     let errors = [];
 
@@ -150,7 +169,17 @@ function validateOptions(options, callback) {
     validateOption(errors, options, 'username', 'You must provide a valid username for the Salesforce instance.');
     validateOption(errors, options, 'password', 'You must provide a valid password + security token for the Salesforce instance.');
 
-    callback(null, errors);
+    if (errors.length === 0) {
+        validateCanLogin(options, (err) => {
+            if (err) {
+                errors.push(err);
+            }
+
+            callback(null, errors);
+        });
+    } else {
+        callback(null, errors);
+    }
 }
 
 module.exports = {

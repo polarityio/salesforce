@@ -5,10 +5,20 @@ let config = require('./config/config');
 let bunyan = require('bunyan');
 config.request.rejectUnauthorized = false;
 
+let baseOptions;
+
 describe('salesforce polarity integration', () => {
     before(() => {
         let logger = bunyan.createLogger({ name: 'Mocha Test' });
         integration.startup(logger);
+
+        baseOptions = {
+            host: 'https://localhost:5555',
+            clientId: 'asdf',
+            clientSecret: 'asdf',
+            username: 'asdf',
+            password: 'asdf'
+        };
     });
 
     xit('should display matching leads', () => {
@@ -21,7 +31,7 @@ describe('salesforce polarity integration', () => {
         });
 
         it('should look up a single contact', (done) => {
-            integration.doLookup([{ value: 'John Doe' }], { host: 'https://localhost:5555', authHost: 'https://localhost:5555' }, (err, result) => {
+            integration.doLookup([{ value: 'John Doe' }], baseOptions, (err, result) => {
                 if (err) {
                     done(err);
                 }
@@ -35,7 +45,7 @@ describe('salesforce polarity integration', () => {
         });
 
         it('should look up multiple contacts', (done) => {
-            integration.doLookup([{ value: 'John Doe' }, { value: 'Jane Moe' }], { host: 'https://localhost:5555', authHost: 'https://localhost:5555' }, (err, result) => {
+            integration.doLookup([{ value: 'John Doe' }, { value: 'Jane Moe' }], baseOptions, (err, result) => {
                 if (err) {
                     done(err);
                 }
@@ -47,7 +57,7 @@ describe('salesforce polarity integration', () => {
         });
 
         it('should handle multiple results for a contact match', (done) => {
-            integration.doLookup([{ value: 'John' }], { host: 'https://localhost:5555', authHost: 'https://localhost:5555' }, (err, result) => {
+            integration.doLookup([{ value: 'John' }], baseOptions, (err, result) => {
                 if (err) {
                     done(err);
                 }
@@ -61,21 +71,22 @@ describe('salesforce polarity integration', () => {
 
     describe('error handling', () => {
         it('should handle authentication errors', (done) => {
-            integration.doLookup([{ value: 'John Doe' }], { host: 'https://localhost:4444', authHost: 'https://localhost:4444' }, (err, result) => {
+            baseOptions.password = 'fdsa';
+            integration.doLookup([{ value: 'John Doe' }], baseOptions, (err, result) => {
                 assert.ok(err);
                 done();
             });
         });
 
         it('should handle search errors', (done) => {
-            integration.doLookup([{ value: 'value that doesnt exist' }], { host: 'https://localhost:5555', authHost: 'https://localhost:5555' }, (err, result) => {
+            integration.doLookup([{ value: 'value that doesnt exist' }], baseOptions, (err, result) => {
                 assert.ok(err);
                 done();
             });
         });
 
         it('should handle errors on result lookup', (done) => {
-            integration.doLookup([{ value: 'bad entity' }], { host: 'https://localhost:5555', authHost: 'https://localhost:5555' }, (err, result) => {
+            integration.doLookup([{ value: 'bad entity' }], baseOptions, (err, result) => {
                 assert.ok(err);
                 done();
             });
@@ -83,17 +94,22 @@ describe('salesforce polarity integration', () => {
     });
 
     describe('integration options', () => {
-        describe('validate options', () => {
-            let baseOptions = {
-                host: { value: 'asdf' },
+        let options;
+
+        before(() => {
+            options = {
+                host: { value: 'https://localhost:5555' },
                 clientId: { value: 'asdf' },
                 clientSecret: { value: 'asdf' },
                 username: { value: 'asdf' },
-                password: { value: 'asdf' },
+                password: { value: 'asdf' }
             };
+        });
 
+        describe('validate options', () => {
             it('should accept valid options', (done) => {
-                integration.validateOptions(baseOptions, (_, errors) => {
+                integration.validateOptions(options, (_, errors) => {
+                    console.error(errors);
                     assert.equal(0, errors.length);
                     done();
                 });
@@ -106,13 +122,30 @@ describe('salesforce polarity integration', () => {
             { key: 'password' }
             ].forEach((option) => {
                 it(`should reject invalid ${option.key}s`, (done) => {
-                    options = JSON.parse(JSON.stringify(baseOptions));
-                    options[option.key] = '';
-                    integration.validateOptions(options, (_, errors) => {
+                    let opts = JSON.parse(JSON.stringify(options));
+                    delete opts[option.key];
+                    integration.validateOptions(opts, (_, errors) => {
                         assert.equal(1, errors.length);
                         assert.include(errors[0].message, option.name ? option.name : option.key);
                         done();
                     });
+                });
+            });
+        });
+
+        describe('check credentials work', () => {
+            it('should pass good credentials', (done) => {
+                integration.validateOptions(options, (_, errors) => {
+                    assert.equal(0, errors.length);
+                    done();
+                });
+            });
+
+            it('should fail bad credentials', (done) => {
+                options.password = { value: 'fdsa' };
+                integration.validateOptions(options, (_, errors) => {
+                    assert.equal(1, errors.length);
+                    done();
                 });
             });
         });
