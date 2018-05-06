@@ -154,7 +154,11 @@ function validateCanLogin(options, callback) {
     }
 
     getToken(opts, (err) => {
-        callback(err);
+        if (err) {
+            callback('could not authorize with Salesforce: ' + err);
+        } else {
+            callback(null);
+        }
     });
 }
 

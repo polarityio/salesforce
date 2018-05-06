@@ -1,6 +1,5 @@
 <div class="details-container">
-    Hello world
-    <!--div class="item">
+    <div class="item">
         {{#if isContact}}
         <div>
             <p>
@@ -51,7 +50,12 @@
                         <b>{{contact.type}}:</b>
                         {{contact.value}}
                     </li>
-                    {{/each}}
+                    {{/each}} {{#if hasEmail}}
+                    <li>
+                        <b>Email:</b>
+                        <a href="mailto:{{email}}">{{email}}</a>
+                    </li>
+                    {{/if}}
                 </ul>
             </p>
             {{/if}} {{#if hasCompany}}
@@ -99,5 +103,5 @@
             {{/if}}
         </div>
         {{/if}}
-    </div-->
+    </div>
 </div>
