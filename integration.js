@@ -2,6 +2,7 @@ let async = require('async');
 let request = require('request');
 let config = require('./config/config');
 let escape = require('./escape');
+let fs = require('fs');
 let requestWithDefaults;
 
 let Logger;
@@ -22,11 +23,14 @@ function getToken(options, callback) {
         password: options.password
     };
 
-    Logger.trace('Token request options', requestOptions);
+    //Logger.trace('Token request options', requestOptions);
 
     requestWithDefaults(requestOptions, (err, resp, body) => {
         if (err || resp.statusCode != 200) {
-            callback(err || new Error(`response status: ${resp.statusCode}`));
+            callback({
+                err: err,
+                detail: 'Error retrieving Salesforce API token'
+            });
             return;
         }
 
@@ -40,28 +44,26 @@ function validEmail(email) {
     return re.test(String(email).toLowerCase());
 }
 
-function doLookup(entities, options, callback) {
-    Logger.trace('Entity options', options);
-
+function doLookup(entities, options, cb) {
     let results = [];
 
     getToken(options, (err, accessToken) => {
         if (err) {
-            Logger.error('Error getting token', { error: err });
-            callback(err);
+            Logger.error('Error getting token', {error: err});
+            cb(err);
             return
         }
 
-        async.each(entities, (entity, callback) => {
+        async.each(entities, (entity, nextEntity) => {
             if (entity.isEmail && !validEmail(entity.value)) {
                 Logger.trace('Skipping email because it fails validation', entity.value);
-                callback();
+                nextEntity();
                 return;
             }
 
             let id = entity.value;
             requestOptions = {};
-            requestOptions.url = options.host + '/services/data/v20.0/search'
+            requestOptions.url = options.host + '/services/data/v20.0/search';
             requestOptions.qs = {
                 q: 'Find {"' + escape(id) + '"}'
             };
@@ -69,52 +71,74 @@ function doLookup(entities, options, callback) {
                 Authorization: `Bearer ${accessToken}`
             };
 
-            Logger.trace('Request options to be sent', { requestOptions: requestOptions });
+            //Logger.trace('Request options to be sent', {requestOptions: requestOptions});
 
             requestWithDefaults(requestOptions, (err, resp, body) => {
                 if (err || resp.statusCode != 200) {
-                    Logger.error({ err: err, statusCode: resp.statusCode, body: body, options: requestOptions });
-                    callback({ err: err, body: body });
+                    Logger.error({err: err, statusCode: resp.statusCode, body: body});
+                    callback({
+                        err: err,
+                        detail: 'Failed to search salesforce',
+                        body: body
+                    });
                     return;
                 }
 
-                Logger.trace('Response from server', { body: body });
+                //Logger.trace('Response from server', {body: body});
 
                 if (body.length == 0) {
-                    results.push({ entity: entity, data: null });
-                    callback();
+                    results.push({entity: entity, data: null});
+                    nextEntity();
                 } else {
-                    async.each(body, (searchResult, callback) => {
-                        let link = options.host + searchResult.attributes.url;
-                        requestOptions = {};
-                        requestOptions.url = link;
-                        requestOptions.headers = {
-                            Authorization: `Bearer ${accessToken}`
-                        };
+                    async.each(body, (searchResult, nextSearchResult) => {
+                        if (searchResult.attributes.type === 'Contact' ||
+                            searchResult.attributes.type === 'Lead' ||
+                            searchResult.attributes.type === 'Opportunity') {
 
-                        Logger.trace({ requestOptions: requestOptions });
+                            let link = options.host + searchResult.attributes.url;
+                            let requestOptions = {
+                                url: link,
+                                headers: {
+                                    Authorization: `Bearer ${accessToken}`
+                                }
+                            };
 
-                        requestWithDefaults(requestOptions, (err, resp, body) => {
-                            if (err || resp.statusCode != 200) {
-                                callback(err || new Error(`http response code: ${resp.statusCode}`));
-                                return;
-                            }
+                            //Logger.trace({requestOptions: requestOptions});
 
-                            Logger.trace({ body: body });
+                            requestWithDefaults(requestOptions, (err, resp, body) => {
+                                if (err || resp.statusCode != 200) {
+                                    nextSearchResult({
+                                        err: err,
+                                        detail: 'Failed to search salesforce',
+                                        body: body
+                                    });
+                                    return;
+                                }
 
-                            body.host = options.host;
+                                //Logger.trace({body: body});
 
-                            results.push({ entity: entity, data: { details: body } });
-                            callback();
-                        });
+                                body.host = options.host;
+
+                                results.push({
+                                    entity: entity,
+                                    data: {
+                                        details: body
+                                    }
+                                });
+
+                                nextSearchResult();
+                            });
+                        } else {
+                            nextSearchResult();
+                        }
                     }, err => {
-                        callback(err);
+                        nextEntity(err);
                     });
                 }
             });
         }, err => {
-            Logger.trace({ results: results });
-            callback(err, results);
+            Logger.trace({results: results});
+            cb(err, results);
         });
     });
 }
@@ -160,6 +184,7 @@ function validateOption(errors, options, optionName, errMessage) {
 }
 
 function validateCanLogin(options, callback) {
+
     let opts = {};
     for (let k in options) {
         opts[k] = options[k].value;
@@ -167,8 +192,9 @@ function validateCanLogin(options, callback) {
 
     getToken(opts, (err) => {
         if (err) {
-            callback('could not authorize with Salesforce: ' + err);
+            callback('could not authorize with Salesforce: ' + JSON.stringify(err));
         } else {
+            Logger.debug('Succesfully validated authentication credentials');
             callback(null);
         }
     });
