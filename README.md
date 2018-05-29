@@ -1,8 +1,10 @@
-# Polarity salesforce Integration
+# Polarity Salesforce Integration
+
+> This integration is under development
 
 ![image](https://img.shields.io/badge/status-beta-green.svg)
 
-## salesforce Integration Options
+## Salesforce Integration Options
 
 ### Option 1
 
