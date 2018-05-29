@@ -29,6 +29,7 @@ function getToken(options, callback) {
         if (err || resp.statusCode != 200) {
             callback({
                 err: err,
+                body: body,
                 detail: 'Error retrieving Salesforce API token'
             });
             return;
@@ -214,7 +215,25 @@ function validateOptions(options, callback) {
     if (errors.length === 0) {
         validateCanLogin(options, (err) => {
             if (err) {
-                errors.push(err);
+                errors.push({
+                    key: 'clientId',
+                    message: err
+                });
+
+                errors.push({
+                    key: 'clientSecret',
+                    message: err
+                });
+
+                errors.push({
+                    key: 'username',
+                    message: err
+                });
+
+                errors.push({
+                    key: 'password',
+                    message: err
+                });
             }
 
             callback(null, errors);
