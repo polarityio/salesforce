@@ -76,7 +76,7 @@ function doLookup(entities, options, cb) {
 
             requestWithDefaults(requestOptions, (err, resp, body) => {
                 if (err || resp.statusCode != 200) {
-                    Logger.error({err: err, statusCode: resp.statusCode, body: body});
+                    Logger.error({err: err, statusCode: resp ? resp.statusCode : null, body: body});
                     callback({
                         err: err,
                         detail: 'Failed to search salesforce',
