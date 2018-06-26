@@ -618,6 +618,7 @@ class Salesforce {
         cb({
           err: err,
           response: response,
+          username: username,
           body: body,
           detail: 'Error retrieving Salesforce API token'
         });
