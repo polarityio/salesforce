@@ -130,7 +130,7 @@ module.exports = {
             key: "username",
             name: "Username",
             description: "The user's username",
-            default: "default-username-value",
+            default: "",
             type: "text",
             userCanEdit: true,
             adminOnly: false
