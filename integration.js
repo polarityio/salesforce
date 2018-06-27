@@ -20,7 +20,7 @@ function isValidEmail(email) {
 
 function doLookup(entities, options, cb) {
   let blacklistDomains = [];
-  if (blacklistDomains.length > 0) {
+  if (options.blacklist.length > 0) {
     blacklistDomains = options.blacklist.split(',');
   }
 
