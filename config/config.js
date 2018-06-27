@@ -89,7 +89,7 @@ module.exports = {
         // You can also set an absolute path.  If you set an absolute path you must ensure that
         // the directory you specify is writable by the `polarityd:polarityd` user and group.
         //directoryPath: '/var/log/polarity-integrations',
-        level: 'info',  //trace, debug, info, warn, error, fatal
+        level: 'debug',  //trace, debug, info, warn, error, fatal
     },
     /**
      * Options that are displayed to the user/admin in the Polarity integration user-interface.  Should be structured
