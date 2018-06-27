@@ -89,7 +89,7 @@ module.exports = {
         // You can also set an absolute path.  If you set an absolute path you must ensure that
         // the directory you specify is writable by the `polarityd:polarityd` user and group.
         //directoryPath: '/var/log/polarity-integrations',
-        level: 'debug',  //trace, debug, info, warn, error, fatal
+        level: 'info',  //trace, debug, info, warn, error, fatal
     },
     /**
      * Options that are displayed to the user/admin in the Polarity integration user-interface.  Should be structured
@@ -105,8 +105,8 @@ module.exports = {
             description: "Hostname of the Salesforce instance to use",
             default: "",
             type: "text",
-            userCanEdit: false,
-            adminOnly: true
+            userCanEdit: true,
+            adminOnly: false
         },
         {
             key: "clientId",
@@ -114,8 +114,8 @@ module.exports = {
             description: "The Client ID for the connected app",
             default: "",
             type: "text",
-            userCanEdit: false,
-            adminOnly: true
+            userCanEdit: true,
+            adminOnly: false
         },
         {
             key: "clientSecret",
@@ -123,17 +123,17 @@ module.exports = {
             description: "The Client Secret for the connected app",
             default: "",
             type: "password",
-            userCanEdit: false,
-            adminOnly: true
+            userCanEdit: true,
+            adminOnly: false
         },
         {
             key: "username",
             name: "Username",
             description: "The user's username",
-            default: "",
+            default: "default-username-value",
             type: "text",
-            userCanEdit: false,
-            adminOnly: true
+            userCanEdit: true,
+            adminOnly: false
         },
         {
             key: "password",
@@ -141,8 +141,8 @@ module.exports = {
             description: "The user's password plus the security token (e.g. so for a password \"password\" and security token \"12345\" then the value in this field should be \"password12345\")",
             default: "",
             type: "password",
-            userCanEdit: false,
-            adminOnly: true
+            userCanEdit: true,
+            adminOnly: false
         },
         {
             key: "blacklist",
@@ -150,7 +150,7 @@ module.exports = {
             description: "Comma delimited list of domains to ignore when sending emails to Salesforce for lookup",
             default: "",
             type: "text",
-            userCanEdit: false,
+            userCanEdit: true,
             adminOnly: false
         },
     ]
