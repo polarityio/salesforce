@@ -6,6 +6,8 @@ The Salesforce integration will search your Salesforce instance for email addres
 The integration will return any contacts and leads for the email address.  When viewing the contact or lead the integration
 will also show related accounts, opportunities and tasks.
 
+> The Salesforce integration requires Polarity Server 3.4+
+
 ## Installing the Integration
 
 General installation instructions for integrations are provided on the [PolarityIO GitHub Page](https://polarityio.github.io/).
