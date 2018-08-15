@@ -22,7 +22,7 @@ module.exports = {
      * @type String
      * @optional
      */
-    description: "Salesforce provides an interface for case and task management, and routing and escalating important events.",
+    description: "The Salesforce integration provides Contact and Lead information based on email lookups",
     entityTypes: ['email'],
     /**
      * An array of style files (css or less) that will be included for your integration. Any styles specified in
