@@ -2,6 +2,10 @@
 
 ![image](https://img.shields.io/badge/status-beta-green.svg)
 
+The Salesforce integration will search your Salesforce instance for email addresses that are recognized on your screen.
+The integration will return any contacts and leads for the email address.  When viewing the contact or lead the integration
+will also show related accounts, opportunities and tasks.
+
 ## Installing the Integration
 
 General installation instructions for integrations are provided on the [PolarityIO GitHub Page](https://polarityio.github.io/).
