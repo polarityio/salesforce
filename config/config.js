@@ -89,7 +89,7 @@ module.exports = {
         // You can also set an absolute path.  If you set an absolute path you must ensure that
         // the directory you specify is writable by the `polarityd:polarityd` user and group.
         //directoryPath: '/var/log/polarity-integrations',
-        level: 'info',  //trace, debug, info, warn, error, fatal
+        level: 'debug',  //trace, debug, info, warn, error, fatal
     },
     /**
      * Options that are displayed to the user/admin in the Polarity integration user-interface.  Should be structured
@@ -100,27 +100,27 @@ module.exports = {
      */
     options: [
         {
-            key: "host",
-            name: "Host",
-            description: "Hostname of the Salesforce instance to use",
+            key: "url",
+            name: "URL",
+            description: "URL of the Salesforce instance to use including the schema (i.e., https://)",
             default: "",
             type: "text",
             userCanEdit: true,
             adminOnly: false
         },
         {
-            key: "clientId",
-            name: "Client ID",
-            description: "The Client ID for the connected app",
+            key: "consumerKey",
+            name: "Consumer Key",
+            description: "The Consumer Key for the connected app",
             default: "",
             type: "text",
             userCanEdit: true,
             adminOnly: false
         },
         {
-            key: "clientSecret",
-            name: "Client Secret",
-            description: "The Client Secret for the connected app",
+            key: "consumerSecret",
+            name: "Consumer Secret",
+            description: "The Consumer Secret for the connected app",
             default: "",
             type: "password",
             userCanEdit: true,

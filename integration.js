@@ -160,6 +160,7 @@ function startup(logger) {
     requestOptions.proxy = config.request.proxy;
   }
 
+
   if (typeof config.request.rejectUnauthorized === 'boolean') {
     requestOptions.rejectUnauthorized = config.request.rejectUnauthorized;
   }
@@ -204,20 +205,20 @@ function validateOptions(options, callback) {
   validateOption(
     errors,
     options,
-    'host',
-    'You must provide a valid host for the Salesforce instance.'
+    'url',
+    'You must provide a valid URL for the Salesforce instance.'
   );
   validateOption(
     errors,
     options,
-    'clientId',
-    'You must provide a valid client id for the Salesforce instance.'
+    'consumerKey',
+    'You must provide a valid Consumer Key for the Salesforce instance.'
   );
   validateOption(
     errors,
     options,
-    'clientSecret',
-    'You must provide a valid client secret for the Salesforce instance.'
+    'consumerSecret',
+    'You must provide a valid Consumer Secret for the Salesforce instance.'
   );
   validateOption(
     errors,

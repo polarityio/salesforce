@@ -462,7 +462,7 @@ class Salesforce {
 
   _getQueryRequestOptions(query, options) {
     return {
-      url: options.host + '/services/data/v43.0/query',
+      url: options.url + '/services/data/v43.0/query',
       json: true,
       followRedirect: true,
       qs: {
@@ -473,7 +473,7 @@ class Salesforce {
 
   _getSearchRequestOptions(query, options) {
     return {
-      url: options.host + '/services/data/v43.0/search',
+      url: options.url + '/services/data/v43.0/search',
       json: true,
       followRedirect: true,
       qs: {
@@ -505,7 +505,7 @@ class Salesforce {
   }
 
   _createUrl(type, id, options) {
-    return options.host + '/lightning/r/' + type + '/' + id + '/view';
+    return options.url + '/lightning/r/' + type + '/' + id + '/view';
   }
 
   _executeRequest(options, requestOptions, cb, requestCount) {
@@ -603,12 +603,12 @@ class Salesforce {
       json: true,
       followRedirect: true
     };
-    requestOptions.url = options.host + '/services/oauth2/token';
+    requestOptions.url = options.url + '/services/oauth2/token';
     requestOptions.method = 'POST';
     requestOptions.form = {
       grant_type: 'password',
-      client_id: options.clientId,
-      client_secret: options.clientSecret,
+      client_id: options.consumerKey,
+      client_secret: options.consumerSecret,
       username: options.username,
       password: options.password
     };
@@ -633,7 +633,7 @@ class Salesforce {
   }
 
   _getAccessTokenCacheKey(options) {
-    let key = options.clientId + options.clientSecret + options.username + options.password;
+    let key = options.url + options.consumerKey + options.consumerSecret + options.username + options.password;
     return crypto
       .createHash('sha1')
       .update(key)
