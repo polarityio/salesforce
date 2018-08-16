@@ -22,8 +22,8 @@ module.exports = {
      * @type String
      * @optional
      */
-    description: "Salesforce provides an interface for case and task management, and routing and escalating important events.",
-    entityTypes: ['string', 'email'],
+    description: "The Salesforce integration provides Contact and Lead information based on email lookups",
+    entityTypes: ['email'],
     /**
      * An array of style files (css or less) that will be included for your integration. Any styles specified in
      * the below files can be used in your custom template.
@@ -88,9 +88,8 @@ module.exports = {
         // `/app/polarity-server/integrations/integration-logs`
         // You can also set an absolute path.  If you set an absolute path you must ensure that
         // the directory you specify is writable by the `polarityd:polarityd` user and group.
-
         //directoryPath: '/var/log/polarity-integrations',
-        level: 'trace',  //trace, debug, info, warn, error, fatal
+        level: 'debug',  //trace, debug, info, warn, error, fatal
     },
     /**
      * Options that are displayed to the user/admin in the Polarity integration user-interface.  Should be structured
@@ -101,31 +100,31 @@ module.exports = {
      */
     options: [
         {
-            key: "host",
-            name: "Host",
-            description: "Hostname of the Salesforce instance to use",
+            key: "url",
+            name: "URL",
+            description: "URL of the Salesforce instance to use including the schema (i.e., https://)",
             default: "",
             type: "text",
-            userCanEdit: false,
-            adminOnly: true
+            userCanEdit: true,
+            adminOnly: false
         },
         {
-            key: "clientId",
-            name: "Client ID",
-            description: "The Client ID for the connected app",
+            key: "consumerKey",
+            name: "Consumer Key",
+            description: "The Consumer Key for the connected app",
             default: "",
             type: "text",
-            userCanEdit: false,
-            adminOnly: true
+            userCanEdit: true,
+            adminOnly: false
         },
         {
-            key: "clientSecret",
-            name: "Client Secret",
-            description: "The Client Secret for the connected app",
+            key: "consumerSecret",
+            name: "Consumer Secret",
+            description: "The Consumer Secret for the connected app",
             default: "",
             type: "password",
-            userCanEdit: false,
-            adminOnly: true
+            userCanEdit: true,
+            adminOnly: false
         },
         {
             key: "username",
@@ -133,8 +132,8 @@ module.exports = {
             description: "The user's username",
             default: "",
             type: "text",
-            userCanEdit: false,
-            adminOnly: true
+            userCanEdit: true,
+            adminOnly: false
         },
         {
             key: "password",
@@ -142,8 +141,17 @@ module.exports = {
             description: "The user's password plus the security token (e.g. so for a password \"password\" and security token \"12345\" then the value in this field should be \"password12345\")",
             default: "",
             type: "password",
-            userCanEdit: false,
-            adminOnly: true
-        }
+            userCanEdit: true,
+            adminOnly: false
+        },
+        {
+            key: "blacklist",
+            name: "Blacklist Domains",
+            description: "Comma delimited list of domains to ignore when sending emails to Salesforce for lookup",
+            default: "",
+            type: "text",
+            userCanEdit: true,
+            adminOnly: false
+        },
     ]
 };

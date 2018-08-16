@@ -1,6 +1,31 @@
-{{#each tags as |tag|}}
-<span class="integration-summary-tag integration-background-color integration-border-color">
-    <span class="acronym integration-text-bold-color">{{block.acronym}}</span>
-    <span class="integration-text-color">{{tag}}</span>
-</span>
+{{#each details.contacts as |contact|}}
+    {{#each contact.fields as |field index|}}
+        {{#if field.summary}}
+            <span class="integration-summary-tag integration-background-color integration-border-color">
+            <span class="acronym integration-text-bold-color">{{block.acronym}}</span>
+            <span class="integration-text-color">
+                {{#if (eq index 0)}}
+                    {{fa-icon "address-card"}}
+                {{/if}}
+                {{field.value}}
+            </span>
+        </span>
+        {{/if}}
+    {{/each}}
+{{/each}}
+
+{{#each details.leads as |lead|}}
+    {{#each lead.fields as |field index|}}
+        {{#if field.summary}}
+            <span class="integration-summary-tag integration-background-color integration-border-color">
+            <span class="acronym integration-text-bold-color">{{block.acronym}}</span>
+            <span class="integration-text-color">
+                {{#if (eq index 0)}}
+                    {{fa-icon "user-circle"}}
+                {{/if}}
+                {{field.value}}
+            </span>
+        </span>
+        {{/if}}
+    {{/each}}
 {{/each}}

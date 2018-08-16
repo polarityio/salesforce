@@ -1,107 +1,212 @@
-<div class="details-container">
-    <div class="item">
-        {{#if isContact}}
+{{!-- Display Contact Data --}}
+{{#each details.contacts as |contact contactIndex|}}
+    {{#if (gt contactIndex 0)}}
+        <hr>
+    {{/if}}
+    <h1 class="p-title">
+        {{fa-icon "address-card"}} Contact
+    </h1>
+    {{#each contact.fields as |property|}}
         <div>
-            <p>
-                <i>{{details.Name}}</i>
-                <a href="{{details.host}}/one/one.app#/sObject/{{details.Id}}/view">View in Salesforce</a>
-            </p>
-            {{#if hasTitle}}
-            <p>
-                Title:
-                <b>{{details.Title}}</b>
-            </p>
-            {{/if}} {{#if hasContact}}
-            <p>
-                Contact:
-                <ul>
-                    {{#each contacts as |contact|}}
-                    <li>
-                        <b>{{contact.type}}:</b>
-                        {{contact.value}}
-                    </li>
-                    {{/each}}
-                </ul>
-            </p>
-            {{/if}} {{#if hasDepartment}}
-            <p>
-                Department:
-                <b>{{details.Department}}</b>
-            </p>
+            <span class="p-key">{{property.display}}:</span>
+            {{#if property.url}}
+                <a href="{{property.url}}" class="p-link">{{property.value}}</a>
+            {{else}}
+                {{#if (eq property.format "date")}}
+                    <span class="p-value" title="{{property.value}}">{{moment-format property.value
+                                                                                     'MM/DD/YYYY'}}</span>
+                {{else}}
+                    <span class="p-value">{{property.value}}</span>
+                {{/if}}
             {{/if}}
         </div>
-        {{/if}} {{#if isLead}}
-        <div>
-            <p>
-                <i>{{details.Name}}</i>
-                <a href="{{details.host}}/one/one.app#/sObject/{{details.Id}}/view">View in Salesforce</a>
-            </p>
-            {{#if hasTitle}}
-            <p>
-                Title:
-                <b>{{details.Title}}</b>
-            </p>
-            {{/if}} {{#if hasContact}}
-            <p>
-                Contact:
-                <ul>
-                    {{#each contacts as |contact|}}
-                    <li>
-                        <b>{{contact.type}}:</b>
-                        {{contact.value}}
-                    </li>
-                    {{/each}} {{#if hasEmail}}
-                    <li>
-                        <b>Email:</b>
-                        <a href="mailto:{{email}}">{{email}}</a>
-                    </li>
-                    {{/if}}
-                </ul>
-            </p>
-            {{/if}} {{#if hasCompany}}
-            <p>
-                Company:
-                <b>{{details.Company}}</b>
-            </p>
-            {{/if}} {{#if hasStatus}}
-            <p>
-                Status:
-                <b>{{details.Status}}</b>
-            </p>
-            {{/if}} {{#if hasSource}}
-            <p>
-                Source:
-                <b>{{details.LeadSource}}</b>
-            </p>
-            {{/if}}
-        </div>
-        {{/if}} {{#if isOpportunity}}
-        <div>
-            <p>
-                <i>{{details.Name}}</i>
-                <a href="{{details.host}}/one/one.app#/sObject/{{details.Id}}/view">View in Salesforce</a>
-            </p>
-            {{#if hasDescription}}
-            <p>
-                <i>{{details.Description}}</i>
-            </p>
-            {{/if}} {{#if hasStage}}
-            <p>
-                Stage:
-                <b>{{details.StageName}}</b>
-            </p>
-            {{/if}} {{#if hasNextStep}}
-            <p>
-                Next Step:
-                <b>{{details.NextStep}}</b>
-            </p>
-            {{/if}} {{#if hasExpectedRevenue}}
-            <p>
-                Expected Revenue:
-                <b>{{details.ExpectedRevenue}}</b>
-            </p>
-            {{/if}}
-        </div>
+    {{/each}}
+    {{#if block.detailsLoaded}}
+        {{#if (and (eq contact.accounts.length 0)
+                      (eq contact.opportunities.length 0)
+                      (eq contact.campaigns.length 0)
+                      (eq contact.tasks.length 0))}}
+            <span class="p-footnote">No Additional Data Available</span>
         {{/if}}
-    </div>
-</div>
+        {{!-- Display Contact Accounts --}}
+        {{#if (gt contact.accounts.length 0)}}
+            <h1 class="p-title">
+                {{fa-icon "building"}} Related Accounts
+            </h1>
+            {{#each contact.accounts as |account|}}
+                {{#each account as |property|}}
+                    <div>
+                        <span class="p-key">{{property.display}}:</span>
+                        {{#if property.url}}
+                            <a href="{{property.url}}" class="p-link">{{property.value}}</a>
+                        {{else}}
+                            {{#if (eq property.format "date")}}
+                                <span class="p-value" title="{{property.value}}">{{moment-format property.value
+                                                                                                 'MM/DD/YYYY'}}</span>
+                            {{else}}
+                                <span class="p-value">{{property.value}}</span>
+                            {{/if}}
+                        {{/if}}
+                    </div>
+                {{/each}}
+            {{/each}}
+        {{/if}}
+
+        {{!-- Display Contact Opportunities --}}
+        {{#if (gt contact.opportunities.length 0)}}
+            <h1 class="p-title">
+                {{fa-icon "crown"}} Opportunities
+            </h1>
+            {{#each contact.opportunities as |opportunity|}}
+                {{#each opportunity as |property|}}
+                    <div>
+                        <span class="p-key">{{property.display}}:</span>
+                        {{#if property.url}}
+                            <a href="{{property.url}}" class="p-link">{{property.value}}</a>
+                        {{else}}
+                            {{#if (eq property.format "date")}}
+                                <span class="p-value" title="{{property.value}}">{{moment-format property.value
+                                                                                                 'MM/DD/YYYY'}}</span>
+                            {{else}}
+                                <span class="p-value">{{property.value}}</span>
+                            {{/if}}
+                        {{/if}}
+                    </div>
+                {{/each}}
+            {{/each}}
+        {{/if}}
+
+
+        {{!-- Display Contact Campaigns--}}
+        {{#if (gt contact.campaigns.length 0)}}
+            <h1 class="p-title">
+                {{fa-icon "bullseye"}} Campaigns
+            </h1>
+            {{#each contact.campaigns as |campaign|}}
+                {{#each campaign as |property|}}
+                    <div>
+                        <span class="p-key">{{property.display}}:</span>
+                        {{#if property.url}}
+                            <a href="{{property.url}}" class="p-link">{{property.value}}</a>
+                        {{else}}
+                            {{#if (eq property.format "date")}}
+                                <span class="p-value" title="{{property.value}}">{{moment-format property.value
+                                                                                                 'MM/DD/YYYY'}}</span>
+                            {{else}}
+                                <span class="p-value">{{property.value}}</span>
+                            {{/if}}
+                        {{/if}}
+                    </div>
+                {{/each}}
+            {{/each}}
+        {{/if}}
+
+
+        {{!-- Display Contact Tasks --}}
+        {{#if (gt contact.tasks.length 0)}}
+            <h1 class="p-title">
+                {{fa-icon "envelope-square"}} Tasks
+            </h1>
+            {{#each contact.tasks as |task|}}
+                <div class="field">
+                    {{#each task as |property|}}
+                        <div>
+                            <span class="p-key">{{property.display}}:</span>
+                            {{#if property.url}}
+                                <a href="{{property.url}}" class="p-link">{{property.value}}</a>
+                            {{else}}
+                                {{#if (eq property.format "date")}}
+                                    <span class="p-value" title="{{property.value}}">{{moment-format property.value
+                                                                                                     'MM/DD/YYYY'}}</span>
+                                {{else}}
+                                    <span class="p-value">{{property.value}}</span>
+                                {{/if}}
+                            {{/if}}
+                        </div>
+                    {{/each}}
+                </div>
+            {{/each}}
+        {{/if}}
+    {{/if}}
+{{/each}}
+
+
+{{!-- Display Lead Data --}}
+{{#each details.leads as |lead leadIndex|}}
+    {{#if (or (gt leadIndex 0) (gt details.contacts.length 0))}}
+        <hr>
+    {{/if}}
+    <h1 class="p-title">
+        {{fa-icon "user-circle"}} Lead
+    </h1>
+    {{#each lead.fields as |property|}}
+        <div>
+            <span class="p-key">{{property.display}}:</span>
+            {{#if property.url}}
+                <a href="{{property.url}}" class="p-link">{{property.value}}</a>
+            {{else}}
+                {{#if (eq property.format "date")}}
+                    <span class="p-value" title="{{property.value}}">{{moment-format property.value
+                                                                                     'MM/DD/YYYY'}}</span>
+                {{else}}
+                    <span class="p-value">{{property.value}}</span>
+                {{/if}}
+            {{/if}}
+        </div>
+    {{/each}}
+
+    {{#if block.detailsLoaded}}
+        {{#if (and (eq lead.campaigns.length 0) (eq lead.tasks.length 0))}}
+            <span class="p-footnote">No Additional Data Available</span>
+        {{/if}}
+        {{!-- Lead Campaigns --}}
+        {{#if (gt lead.campaigns.length 0)}}
+            <h1 class="p-title">
+                {{fa-icon "bullseye"}} Campaigns
+            </h1>
+            {{#each lead.campaigns as |campaign|}}
+                {{#each campaign as |property|}}
+                    <div>
+                        <span class="p-key">{{property.display}}:</span>
+                        {{#if property.url}}
+                            <a href="{{property.url}}" class="p-link">{{property.value}}</a>
+                        {{else}}
+                            {{#if (eq property.format "date")}}
+                                <span class="p-value" title="{{property.value}}">{{moment-format property.value
+                                                                                                 'MM/DD/YYYY'}}</span>
+                            {{else}}
+                                <span class="p-value">{{property.value}}</span>
+                            {{/if}}
+                        {{/if}}
+                    </div>
+                {{/each}}
+            {{/each}}
+        {{/if}}
+
+        {{!-- Lead Tasks --}}
+        {{#if (gt lead.tasks.length 0)}}
+            <h1 class="p-title">
+                {{fa-icon "envelope-square"}} Tasks
+            </h1>
+            {{#each lead.tasks as |task|}}
+                <div class="field">
+                    {{#each task as |property|}}
+                        <div>
+                            <span class="p-key">{{property.display}}:</span>
+                            {{#if property.url}}
+                                <a href="{{property.url}}" class="p-link">{{property.value}}</a>
+                            {{else}}
+                                {{#if (eq property.format "date")}}
+                                    <span class="p-value" title="{{property.value}}">{{moment-format property.value
+                                                                                                     'MM/DD/YYYY'}}</span>
+                                {{else}}
+                                    <span class="p-value">{{property.value}}</span>
+                                {{/if}}
+                            {{/if}}
+                        </div>
+                    {{/each}}
+                </div>
+            {{/each}}
+        {{/if}}
+    {{/if}}
+{{/each}}
