@@ -185,6 +185,11 @@ const TASK_FIELDS = [
     format: 'date'
   },
   {
+    path: 'ActivityDate',
+    display: 'Due Date',
+    format: 'date'
+  },
+  {
     path: 'Subject',
     id: 'Id',
     type: 'Task'
@@ -633,7 +638,12 @@ class Salesforce {
   }
 
   _getAccessTokenCacheKey(options) {
-    let key = options.url + options.consumerKey + options.consumerSecret + options.username + options.password;
+    let key =
+      options.url +
+      options.consumerKey +
+      options.consumerSecret +
+      options.username +
+      options.password;
     return crypto
       .createHash('sha1')
       .update(key)
