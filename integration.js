@@ -237,12 +237,12 @@ function validateOptions(options, callback) {
     validateCanLogin(options, (err) => {
       if (err) {
         errors.push({
-          key: 'clientId',
+          key: 'consumerKey',
           message: err
         });
 
         errors.push({
-          key: 'clientSecret',
+          key: 'consumerSecret',
           message: err
         });
 
