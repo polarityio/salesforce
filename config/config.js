@@ -138,7 +138,7 @@ module.exports = {
         {
             key: "password",
             name: "Password",
-            description: "The user's password plus the security token (e.g. so for a password \"password\" and security token \"12345\" then the value in this field should be \"password12345\")",
+            description: "The user's password",
             default: "",
             type: "password",
             userCanEdit: true,
