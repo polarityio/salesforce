@@ -68,11 +68,13 @@ const OPPORTUNITY_FIELDS = [
   },
   {
     path: 'Opportunity.CreatedDate',
-    display: 'Created'
+    display: 'Created',
+    format: 'date'
   },
   {
     path: 'Opportunity.LastModifiedDate',
-    display: 'Last Modified'
+    display: 'Last Modified',
+    format: 'date'
   },
   {
     path: 'Opportunity.Amount',
