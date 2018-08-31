@@ -200,9 +200,9 @@ const TASK_FIELDS = [
   {
     path: 'Status'
   },
-  // {
-  //   path: 'Description'
-  // },
+  {
+    path: 'Description'
+  },
   {
     path: 'Owner.Name',
     display: 'Task Owner',
