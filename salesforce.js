@@ -531,7 +531,7 @@ class Salesforce {
       };
 
       self.request(requestOptions, (err, response, body) => {
-        if (response.statusCode === 401 && requestCount < 2) {
+        if (!err && response.statusCode === 401 && requestCount < 2) {
           // accessToken has expired
           self.accessTokenCache.delete(self._getAccessTokenCacheKey(options));
 
