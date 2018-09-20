@@ -136,6 +136,17 @@ function onDetails(lookupObject, options, cb) {
   );
 }
 
+function onMessage(payload, options, cb) {
+  Logger.debug({ payload: payload, options: options }, 'Received onMessage');
+  switch (payload.action) {
+    case 'GET_SIMILAR_OPP':
+      salesforce.getSimilarOpportunities(payload.term, options, cb);
+      break;
+    default:
+      cb('Unexpected message type', {});
+  }
+}
+
 function startup(logger) {
   Logger = logger;
   let requestOptions = {};
@@ -159,7 +170,6 @@ function startup(logger) {
   if (typeof config.request.proxy === 'string' && config.request.proxy.length > 0) {
     requestOptions.proxy = config.request.proxy;
   }
-
 
   if (typeof config.request.rejectUnauthorized === 'boolean') {
     requestOptions.rejectUnauthorized = config.request.rejectUnauthorized;
@@ -268,5 +278,6 @@ module.exports = {
   doLookup: doLookup,
   startup: startup,
   onDetails: onDetails,
+  onMessage: onMessage,
   validateOptions: validateOptions
 };

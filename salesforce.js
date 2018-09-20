@@ -112,6 +112,65 @@ const OPPORTUNITY_FIELDS = [
   }
 ];
 
+const SIMILAR_OPPORTUNITY_FIELDS = [
+  {
+    path: 'Name',
+    display: 'Name',
+    id: 'Id',
+    type: 'Opportunity'
+  },
+  {
+    path: 'Id',
+    hidden: true
+  },
+  {
+    path: 'Description',
+    display: 'Description'
+  },
+  {
+    path: 'CreatedDate',
+    display: 'Created',
+    format: 'date'
+  },
+  {
+    path: 'LastModifiedDate',
+    display: 'Last Modified',
+    format: 'date'
+  },
+  {
+    path: 'Amount',
+    display: 'Amount'
+  },
+  {
+    path: 'Type',
+    display: 'Type'
+  },
+  {
+    path: 'StageName',
+    display: 'Stage'
+  },
+  {
+    path: 'Owner.Name',
+    display: 'Opportunity Owner',
+    id: 'Owner.Id',
+    type: 'User'
+  },
+  {
+    path: 'Owner.Id',
+    hidden: true
+  },
+  {
+    path: 'Campaign.Name',
+    display: 'Campaign Name',
+    id: 'Campaign.Id',
+    type: 'Campaign'
+  },
+  {
+    path: 'Campaign.Id',
+    hidden: true
+  }
+];
+
 const ACCOUNT_FIELDS = [
   {
     path: 'Account.Name',
@@ -412,6 +471,28 @@ class Salesforce {
         body.records.forEach((record) => {
           results.push(self._processRecord(record, OPPORTUNITY_FIELDS, options));
         });
+        cb(null, results);
+      })
+    );
+  }
+
+  getSimilarOpportunities(term, options, cb) {
+    const self = this;
+    const results = [];
+    const similarOpportunityQuery = `SELECT ${SIMILAR_OPPORTUNITY_FIELDS.map((field) => field.path).join(
+      ','
+    )} FROM Opportunity WHERE Name LIKE '%${term}%' AND NAME != '${term}'`;
+
+    self.log.debug({ query: similarOpportunityQuery }, 'getSimilarOpportunities query');
+    this._executeRequest(
+      options,
+      self._getQueryRequestOptions(similarOpportunityQuery, options),
+      self._handleRequestError('Retrieving Similar Opportunities', cb, (response, body) => {
+        self.log.debug({ records: body.records }, 'getSimilarOpportunities records');
+        body.records.forEach((record) => {
+          results.push(self._processRecord(record, SIMILAR_OPPORTUNITY_FIELDS, options));
+        });
+        self.log.debug({ similarResults: results }, 'getSimilarOpportunities');
         cb(null, results);
       })
     );
