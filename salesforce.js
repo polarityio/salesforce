@@ -23,6 +23,8 @@ const CONTACT_FIELDS = [
   },
   {
     path: 'Name',
+    id: 'Id',
+    type: 'User',
     summary: true
   },
   {
