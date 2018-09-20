@@ -76,6 +76,40 @@
                         {{/if}}
                     </div>
                 {{/each}}
+
+                {{#if (eq contact.similarOpportunities.length 0)}}
+                    <div class="p-footnote">No Similar Opportunities Found</div>
+                {{else}}
+                    <span class="p-action" {{action "getSimilarOpportunities" opportunity contactIndex}}>View Similar Opportunities</span>
+                {{/if}}
+                {{#if contact.loadingSimilarOpportunities}}
+                    <div>
+                        {{fa-icon "spinner-third" fixedWidth=true spin=true size="sm"}} Loading
+                    </div>
+                {{/if}}
+                {{#if contact.similarOpportunitiesError}}
+                    <div class="p-red p-footnote">
+                        {{contact.similarOpportunitiesError}}
+                    </div>
+                {{/if}}
+                {{#each contact.similarOpportunities as |similarOpportunity|}}
+                    {{#each similarOpportunity as |property|}}
+                        <div>
+                            <span class="p-key">{{property.display}}:</span>
+                            {{#if property.url}}
+                                <a href="{{property.url}}" class="p-link">{{property.value}}</a>
+                            {{else}}
+                                {{#if (eq property.format "date")}}
+                                    <span class="p-value" title="{{property.value}}">
+                                        {{moment-format property.value 'MM/DD/YYYY' timeZone=timezone}}
+                                    </span>
+                                {{else}}
+                                    <span class="p-value">{{property.value}}</span>
+                                {{/if}}
+                            {{/if}}
+                        </div>
+                    {{/each}}
+                {{/each}}
             {{/each}}
         {{/if}}
 
