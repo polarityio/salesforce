@@ -10,7 +10,8 @@ polarity.export = PolarityComponent.extend({
       self.set(`block.data.details.contacts.${contactIndex}.loadingSimilarOpportunities`, true);
       const payload = {
         action: 'GET_SIMILAR_OPP',
-        term: opportunity.find((property) => property.path === 'Opportunity.Name').value
+        term: opportunity.find((property) => property.path === 'Opportunity.Name').value,
+        opportunityId: opportunity.find((property) => property.path === 'Opportunity.Id').value
       };
 
       // This is a utility method that will send the payload to the server where it will trigger the integration's `onMessage` method
@@ -30,6 +31,10 @@ polarity.export = PolarityComponent.extend({
           self.set(
             `block.data.details.contacts.${contactIndex}.loadingSimilarOpportunities`,
             false
+          );
+          self.set(
+            `block.data.details.contacts.${contactIndex}.similarOpportunitiesSearched`,
+            true
           );
         });
     }

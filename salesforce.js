@@ -7,10 +7,10 @@ const escape = require('./escape');
  *
  * path {String} The query path for the field
  * display {String} The display value in the template for this field
- * hidden {boolean} if true, the field won't be sent to the template but will still be queried (defaults to false)
+ * hidden {boolean} if true, the field won't  be rendered by the template(defaults to false)
  * id {String} Path to the Id attribute for this field.  If present, a `type` property is also expected
  * type {String} The Type of object (Contact, User, Account, Opportunity, Lead, Task etc.)
- * format {String} "date" is the only option but this affects how the template tries to format the field
+ * format {String} "date", "email", and "paragraph" are valid value.  This option effects how the template tries to format the field
  * summary {boolean} If true, this field will be used as a tag in the summary block (only applicable to contacts and leads)
  *
  * If "id" and "type" are present then we will link to the given resource
@@ -38,7 +38,8 @@ const CONTACT_FIELDS = [
     path: 'MobilePhone'
   },
   {
-    path: 'Email'
+    path: 'Email',
+    format: 'email'
   },
   {
     path: 'Owner.Name',
@@ -46,6 +47,11 @@ const CONTACT_FIELDS = [
     id: 'Owner.Id',
     type: 'User',
     summary: true
+  },
+  {
+    path: 'Owner.Email',
+    display: 'Owner Email',
+    format: 'email'
   },
   {
     path: 'Owner.Id',
@@ -97,6 +103,11 @@ const OPPORTUNITY_FIELDS = [
     type: 'User'
   },
   {
+    path: 'Opportunity.Owner.Email',
+    display: 'Owner Email',
+    format: 'email'
+  },
+  {
     path: 'Opportunity.Owner.Id',
     hidden: true
   },
@@ -128,6 +139,16 @@ const SIMILAR_OPPORTUNITY_FIELDS = [
     display: 'Description'
   },
   {
+    path: 'Account.Name',
+    display: 'Account',
+    id: 'Account.Id',
+    type: 'Account'
+  },
+  {
+    path: 'Account.Id',
+    hidden: true
+  },
+  {
     path: 'CreatedDate',
     display: 'Created',
     format: 'date'
@@ -154,6 +175,11 @@ const SIMILAR_OPPORTUNITY_FIELDS = [
     display: 'Opportunity Owner',
     id: 'Owner.Id',
     type: 'User'
+  },
+  {
+    path: 'Owner.Email',
+    display: 'Owner Email',
+    format: 'email'
   },
   {
     path: 'Owner.Id',
@@ -205,6 +231,11 @@ const ACCOUNT_FIELDS = [
     display: 'Account Owner',
     id: 'Account.Owner.Id',
     type: 'User'
+  },
+  {
+    path: 'Account.Owner.Email',
+    display: 'Owner Email',
+    format: 'email'
   },
   {
     path: 'Account.Owner.Id',
@@ -264,17 +295,23 @@ const TASK_FIELDS = [
     path: 'Status'
   },
   {
-    path: 'Description'
-  },
-  {
     path: 'Owner.Name',
     display: 'Task Owner',
     id: 'Owner.Id',
     type: 'User'
   },
   {
+    path: 'Owner.Email',
+    display: 'Owner Email',
+    format: 'email'
+  },
+  {
     path: 'Owner.Id',
     hidden: true
+  },
+  {
+    path: 'Description',
+    format: 'paragraph'
   }
 ];
 
@@ -321,6 +358,11 @@ const LEAD_FIELDS = [
     id: 'Owner.Id',
     type: 'User',
     summary: true
+  },
+  {
+    path: 'Owner.Email',
+    display: 'Owner Email',
+    format: 'email'
   },
   {
     path: 'Owner.Id',
@@ -476,12 +518,22 @@ class Salesforce {
     );
   }
 
-  getSimilarOpportunities(term, options, cb) {
+  /**
+   *
+   * @param term {String} The search term (opportunity name)
+   * @param opportunityId {String} This is the ID of the opportunity which we are searching for additional similar
+   * opportunities.  We use this ID value to ensure we don't return the opportunity we are searching for.
+   * @param options
+   * @param cb
+   */
+  getSimilarOpportunities(term, opportunityId, options, cb) {
     const self = this;
     const results = [];
-    const similarOpportunityQuery = `SELECT ${SIMILAR_OPPORTUNITY_FIELDS.map((field) => field.path).join(
+    const similarOpportunityQuery = `SELECT ${SIMILAR_OPPORTUNITY_FIELDS.map(
+      (field) => field.path
+    ).join(
       ','
-    )} FROM Opportunity WHERE Name LIKE '%${term}%' AND NAME != '${term}'`;
+    )} FROM Opportunity WHERE Name LIKE '%${term}%' AND Id != '${opportunityId}' ORDER BY LastModifiedDate DESC LIMIT 10 `;
 
     self.log.debug({ query: similarOpportunityQuery }, 'getSimilarOpportunities query');
     this._executeRequest(
@@ -579,14 +631,15 @@ class Salesforce {
       let id = _.get(record, fieldObject.id);
 
       // Some keys might not have a value so we don't set those
-      if (value && fieldObject.hidden !== true) {
+      if (value) {
         parsedRecord.push({
           path: fieldObject.path,
           display: fieldObject.display ? fieldObject.display : fieldObject.path,
           url: id ? this._createUrl(fieldObject.type, id, options) : null,
           value: value,
           format: fieldObject.format ? fieldObject.format : 'text',
-          summary: fieldObject.summary ? fieldObject.summary : false
+          summary: fieldObject.summary ? fieldObject.summary : false,
+          hidden: fieldObject.hidden === true ? true : false
         });
       }
     });

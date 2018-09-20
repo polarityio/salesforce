@@ -7,20 +7,28 @@
         {{fa-icon "address-card"}} Contact
     </h1>
     {{#each contact.fields as |property|}}
-        <div>
-            <span class="p-key">{{property.display}}:</span>
-            {{#if property.url}}
-                <a href="{{property.url}}" class="p-link">{{property.value}}</a>
-            {{else}}
-                {{#if (eq property.format "date")}}
-                    <span class="p-value" title="{{property.value}}">
-                        {{moment-format property.value 'MM/DD/YYYY' timeZone=timezone}}
-                    </span>
+        {{#unless property.hidden}}
+            <div>
+                <span class="p-key">{{property.display}}:</span>
+                {{#if property.url}}
+                    <a href="{{property.url}}" class="p-link">{{property.value}}</a>
                 {{else}}
-                    <span class="p-value">{{property.value}}</span>
+                    {{#if (eq property.format "date")}}
+                        <span class="p-value" title="{{property.value}}">
+                            {{moment-format property.value 'MM/DD/YYYY' timeZone=timezone}}
+                        </span>
+                    {{else if (eq property.format 'email')}}
+                        <span class="p-value">{{property.value}}</span>
+                        <a href="mailto:{{property.value}}" title="Email {{property.value}}"
+                           target="_blank" class="p-action">
+                            {{fa-icon "envelope" fixedWidth=true}}
+                        </a>
+                    {{else}}
+                        <span class="p-value">{{property.value}}</span>
+                    {{/if}}
                 {{/if}}
-            {{/if}}
-        </div>
+            </div>
+        {{/unless}}
     {{/each}}
     {{#if block.detailsLoaded}}
         {{#if (and (eq contact.accounts.length 0)
@@ -36,20 +44,28 @@
             </h1>
             {{#each contact.accounts as |account|}}
                 {{#each account as |property|}}
-                    <div>
-                        <span class="p-key">{{property.display}}:</span>
-                        {{#if property.url}}
-                            <a href="{{property.url}}" class="p-link">{{property.value}}</a>
-                        {{else}}
-                            {{#if (eq property.format "date")}}
-                                <span class="p-value" title="{{property.value}}">
-                                    {{moment-format property.value 'MM/DD/YYYY' timeZone=timezone}}
-                                </span>
+                    {{#unless property.hidden}}
+                        <div>
+                            <span class="p-key">{{property.display}}:</span>
+                            {{#if property.url}}
+                                <a href="{{property.url}}" class="p-link">{{property.value}}</a>
                             {{else}}
-                                <span class="p-value">{{property.value}}</span>
+                                {{#if (eq property.format "date")}}
+                                    <span class="p-value" title="{{property.value}}">
+                                        {{moment-format property.value 'MM/DD/YYYY' timeZone=timezone}}
+                                    </span>
+                                {{else if (eq property.format 'email')}}
+                                    <span class="p-value">{{property.value}}</span>
+                                    <a href="mailto:{{property.value}}" title="Email {{property.value}}"
+                                       target="_blank" class="p-action">
+                                        {{fa-icon "envelope" fixedWidth=true}}
+                                    </a>
+                                {{else}}
+                                    <span class="p-value">{{property.value}}</span>
+                                {{/if}}
                             {{/if}}
-                        {{/if}}
-                    </div>
+                        </div>
+                    {{/unless}}
                 {{/each}}
             {{/each}}
         {{/if}}
@@ -61,39 +77,7 @@
             </h1>
             {{#each contact.opportunities as |opportunity|}}
                 {{#each opportunity as |property|}}
-                    <div>
-                        <span class="p-key">{{property.display}}:</span>
-                        {{#if property.url}}
-                            <a href="{{property.url}}" class="p-link">{{property.value}}</a>
-                        {{else}}
-                            {{#if (eq property.format "date")}}
-                                <span class="p-value" title="{{property.value}}">
-                                    {{moment-format property.value 'MM/DD/YYYY' timeZone=timezone}}
-                                </span>
-                            {{else}}
-                                <span class="p-value">{{property.value}}</span>
-                            {{/if}}
-                        {{/if}}
-                    </div>
-                {{/each}}
-
-                {{#if (eq contact.similarOpportunities.length 0)}}
-                    <div class="p-footnote">No Similar Opportunities Found</div>
-                {{else}}
-                    <span class="p-action" {{action "getSimilarOpportunities" opportunity contactIndex}}>View Similar Opportunities</span>
-                {{/if}}
-                {{#if contact.loadingSimilarOpportunities}}
-                    <div>
-                        {{fa-icon "spinner-third" fixedWidth=true spin=true size="sm"}} Loading
-                    </div>
-                {{/if}}
-                {{#if contact.similarOpportunitiesError}}
-                    <div class="p-red p-footnote">
-                        {{contact.similarOpportunitiesError}}
-                    </div>
-                {{/if}}
-                {{#each contact.similarOpportunities as |similarOpportunity|}}
-                    {{#each similarOpportunity as |property|}}
+                    {{#unless property.hidden}}
                         <div>
                             <span class="p-key">{{property.display}}:</span>
                             {{#if property.url}}
@@ -103,13 +87,73 @@
                                     <span class="p-value" title="{{property.value}}">
                                         {{moment-format property.value 'MM/DD/YYYY' timeZone=timezone}}
                                     </span>
+                                {{else if (eq property.format 'email')}}
+                                    <span class="p-value">{{property.value}}</span>
+                                    <a href="mailto:{{property.value}}" title="Email {{property.value}}"
+                                       target="_blank" class="p-action">
+                                        {{fa-icon "envelope" fixedWidth=true}}
+                                    </a>
                                 {{else}}
                                     <span class="p-value">{{property.value}}</span>
                                 {{/if}}
                             {{/if}}
                         </div>
-                    {{/each}}
+                    {{/unless}}
                 {{/each}}
+
+                {{!-- Similar Opportunities Logic --}}
+                {{#if (eq contact.similarOpportunities.length 0)}}
+                    <div class="p-footnote">No Similar Opportunities Found</div>
+                {{/if}}
+                {{#unless (or contact.similarOpportunitiesSearched contact.loadingSimilarOpportunities)}}
+                    <span class="p-action search-similar-opportunities" {{action "getSimilarOpportunities" opportunity
+                                                                                 contactIndex}}>Search Similar Opportunities</span>
+                {{/unless}}
+                {{#if contact.loadingSimilarOpportunities}}
+                    <span class="search-similar-opportunities">
+                        {{fa-icon "spinner-third" fixedWidth=true spin=true size="sm"}} Searching ...
+                    </span>
+                {{/if}}
+                {{#if contact.similarOpportunitiesError}}
+                    <div class="p-red p-footnote">
+                        {{contact.similarOpportunitiesError}}
+                    </div>
+                {{/if}}
+                {{#if (gt contact.similarOpportunities.length 0)}}
+                    <h1 class="p-title">
+                        {{fa-icon "crown"}} Similar Opportunities
+                    </h1>
+                {{/if}}
+                {{#each contact.similarOpportunities as |similarOpportunity|}}
+                    <div class="similar-opportunity">
+                        {{#each similarOpportunity as |property|}}
+                            {{#unless property.hidden}}
+                                <div>
+                                    <span class="p-key">{{property.display}}:</span>
+                                    {{#if property.url}}
+                                        <a href="{{property.url}}" class="p-link">{{property.value}}</a>
+                                    {{else}}
+                                        {{#if (eq property.format "date")}}
+                                            <span class="p-value" title="{{property.value}}">
+                                                {{moment-format property.value 'MM/DD/YYYY' timeZone=timezone}}
+                                            </span>
+                                        {{else if (eq property.format 'email')}}
+                                            <span class="p-value">{{property.value}}</span>
+                                            <a href="mailto:{{property.value}}" title="Email {{property.value}}"
+                                               target="_blank" class="p-action">
+                                                {{fa-icon "envelope" fixedWidth=true}}
+                                            </a>
+                                        {{else}}
+                                            <span class="p-value">{{property.value}}</span>
+                                        {{/if}}
+                                    {{/if}}
+                                </div>
+                            {{/unless}}
+                        {{/each}}
+                    </div>
+                {{/each}}
+
+
             {{/each}}
         {{/if}}
 
@@ -121,20 +165,28 @@
             </h1>
             {{#each contact.campaigns as |campaign|}}
                 {{#each campaign as |property|}}
-                    <div>
-                        <span class="p-key">{{property.display}}:</span>
-                        {{#if property.url}}
-                            <a href="{{property.url}}" class="p-link">{{property.value}}</a>
-                        {{else}}
-                            {{#if (eq property.format "date")}}
-                                <span class="p-value" title="{{property.value}}">
-                                    {{moment-format property.value 'MM/DD/YYYY' timeZone=timezone}}
-                                </span>
+                    {{#unless property.hidden}}
+                        <div>
+                            <span class="p-key">{{property.display}}:</span>
+                            {{#if property.url}}
+                                <a href="{{property.url}}" class="p-link">{{property.value}}</a>
                             {{else}}
-                                <span class="p-value">{{property.value}}</span>
+                                {{#if (eq property.format "date")}}
+                                    <span class="p-value" title="{{property.value}}">
+                                        {{moment-format property.value 'MM/DD/YYYY' timeZone=timezone}}
+                                    </span>
+                                {{else if (eq property.format 'email')}}
+                                    <span class="p-value">{{property.value}}</span>
+                                    <a href="mailto:{{property.value}}" title="Email {{property.value}}"
+                                       target="_blank" class="p-action">
+                                        {{fa-icon "envelope" fixedWidth=true}}
+                                    </a>
+                                {{else}}
+                                    <span class="p-value">{{property.value}}</span>
+                                {{/if}}
                             {{/if}}
-                        {{/if}}
-                    </div>
+                        </div>
+                    {{/unless}}
                 {{/each}}
             {{/each}}
         {{/if}}
@@ -148,20 +200,28 @@
             {{#each contact.tasks as |task|}}
                 <div class="field">
                     {{#each task as |property|}}
-                        <div>
-                            <span class="p-key">{{property.display}}:</span>
-                            {{#if property.url}}
-                                <a href="{{property.url}}" class="p-link">{{property.value}}</a>
-                            {{else}}
-                                {{#if (eq property.format "date")}}
-                                    <span class="p-value" title="{{property.value}}">
-                                        {{moment-format property.value 'MM/DD/YYYY' timeZone=timezone}}
-                                    </span>
+                        {{#unless property.hidden}}
+                            <div>
+                                <span class="p-key">{{property.display}}:</span>
+                                {{#if property.url}}
+                                    <a href="{{property.url}}" class="p-link">{{property.value}}</a>
                                 {{else}}
-                                    <span class="p-value">{{property.value}}</span>
+                                    {{#if (eq property.format "date")}}
+                                        <span class="p-value" title="{{property.value}}">
+                                            {{moment-format property.value 'MM/DD/YYYY' timeZone=timezone}}
+                                        </span>
+                                    {{else if (eq property.format 'email')}}
+                                        <span class="p-value">{{property.value}}</span>
+                                        <a href="mailto:{{property.value}}" title="Email {{property.value}}"
+                                           target="_blank" class="p-action">
+                                            {{fa-icon "envelope" fixedWidth=true}}
+                                        </a>
+                                    {{else}}
+                                        <span class="p-value">{{property.value}}</span>
+                                    {{/if}}
                                 {{/if}}
-                            {{/if}}
-                        </div>
+                            </div>
+                        {{/unless}}
                     {{/each}}
                 </div>
             {{/each}}
@@ -179,20 +239,30 @@
         {{fa-icon "user-circle"}} Lead
     </h1>
     {{#each lead.fields as |property|}}
-        <div>
-            <span class="p-key">{{property.display}}:</span>
-            {{#if property.url}}
-                <a href="{{property.url}}" class="p-link">{{property.value}}</a>
-            {{else}}
-                {{#if (eq property.format "date")}}
-                    <span class="p-value" title="{{property.value}}">
-                        {{moment-format property.value 'MM/DD/YYYY' timeZone=timezone}}
-                    </span>
+        {{#unless property.hidden}}
+            <div>
+                <span class="p-key">{{property.display}}:</span>
+                {{#if property.url}}
+                    <a href="{{property.url}}" class="p-link">{{property.value}}</a>
                 {{else}}
-                    <span class="p-value">{{property.value}}</span>
+                    {{#if (eq property.format "date")}}
+                        <span class="p-value" title="{{property.value}}">
+                            {{moment-format property.value 'MM/DD/YYYY' timeZone=timezone}}
+                        </span>
+                    {{else if (eq property.format 'email')}}
+                        <span class="p-value">{{property.value}}</span>
+                        <a href="mailto:{{property.value}}" title="Email {{property.value}}"
+                           target="_blank" class="p-action">
+                            {{fa-icon "envelope" fixedWidth=true}}
+                        </a>
+                    {{else if (eq property.format 'paragraph')}}
+                        <pre>{{property.value}}</pre>
+                    {{else}}
+                        <span class="p-value">{{property.value}}</span>
+                    {{/if}}
                 {{/if}}
-            {{/if}}
-        </div>
+            </div>
+        {{/unless}}
     {{/each}}
 
     {{#if block.detailsLoaded}}
@@ -206,20 +276,28 @@
             </h1>
             {{#each lead.campaigns as |campaign|}}
                 {{#each campaign as |property|}}
-                    <div>
-                        <span class="p-key">{{property.display}}:</span>
-                        {{#if property.url}}
-                            <a href="{{property.url}}" class="p-link">{{property.value}}</a>
-                        {{else}}
-                            {{#if (eq property.format "date")}}
-                                <span class="p-value" title="{{property.value}}">
-                                    {{moment-format property.value 'MM/DD/YYYY' timeZone=timezone}}
-                                </span>
+                    {{#unless property.hidden}}
+                        <div>
+                            <span class="p-key">{{property.display}}:</span>
+                            {{#if property.url}}
+                                <a href="{{property.url}}" class="p-link">{{property.value}}</a>
                             {{else}}
-                                <span class="p-value">{{property.value}}</span>
+                                {{#if (eq property.format "date")}}
+                                    <span class="p-value" title="{{property.value}}">
+                                        {{moment-format property.value 'MM/DD/YYYY' timeZone=timezone}}
+                                    </span>
+                                {{else if (eq property.format 'email')}}
+                                    <span class="p-value">{{property.value}}</span>
+                                    <a href="mailto:{{property.value}}" title="Email {{property.value}}"
+                                       target="_blank" class="p-action">
+                                        {{fa-icon "envelope" fixedWidth=true}}
+                                    </a>
+                                {{else}}
+                                    <span class="p-value">{{property.value}}</span>
+                                {{/if}}
                             {{/if}}
-                        {{/if}}
-                    </div>
+                        </div>
+                    {{/unless}}
                 {{/each}}
             {{/each}}
         {{/if}}
@@ -232,20 +310,30 @@
             {{#each lead.tasks as |task|}}
                 <div class="field">
                     {{#each task as |property|}}
-                        <div>
-                            <span class="p-key">{{property.display}}:</span>
-                            {{#if property.url}}
-                                <a href="{{property.url}}" class="p-link">{{property.value}}</a>
-                            {{else}}
-                                {{#if (eq property.format "date")}}
-                                    <span class="p-value" title="{{property.value}}">
-                                        {{moment-format property.value 'MM/DD/YYYY' timeZone=timezone}}
-                                    </span>
+                        {{#unless property.hidden}}
+                            <div>
+                                <span class="p-key">{{property.display}}:</span>
+                                {{#if property.url}}
+                                    <a href="{{property.url}}" class="p-link">{{property.value}}</a>
                                 {{else}}
-                                    <span class="p-value">{{property.value}}</span>
+                                    {{#if (eq property.format "date")}}
+                                        <span class="p-value" title="{{property.value}}">
+                                            {{moment-format property.value 'MM/DD/YYYY' timeZone=timezone}}
+                                        </span>
+                                    {{else if (eq property.format 'email')}}
+                                        <span class="p-value">{{property.value}}</span>
+                                        <a href="mailto:{{property.value}}" title="Email {{property.value}}"
+                                           target="_blank" class="p-action">
+                                            {{fa-icon "envelope" fixedWidth=true}}
+                                        </a>
+                                    {{else if (eq property.format 'paragraph')}}
+                                            <textarea disabled>{{property.value}}</textarea>
+                                    {{else}}
+                                        <span class="p-value">{{property.value}}</span>
+                                    {{/if}}
                                 {{/if}}
-                            {{/if}}
-                        </div>
+                            </div>
+                        {{/unless}}
                     {{/each}}
                 </div>
             {{/each}}
