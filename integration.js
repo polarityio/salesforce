@@ -140,7 +140,7 @@ function onMessage(payload, options, cb) {
   Logger.debug({ payload: payload, options: options }, 'Received onMessage');
   switch (payload.action) {
     case 'GET_SIMILAR_OPP':
-      salesforce.getSimilarOpportunities(payload.term, options, cb);
+      salesforce.getSimilarOpportunities(payload.term, payload.opportunityId, options, cb);
       break;
     default:
       cb('Unexpected message type', {});
