@@ -8,6 +8,11 @@ will also show related accounts, opportunities and tasks.
 
 > The Salesforce integration requires Polarity Server 3.4+
 
+| ![image](https://user-images.githubusercontent.com/306319/45882510-60a7bc80-bd7c-11e8-8425-f0adf5a6fbd9.png) |
+|---|
+|*Salesforce Contact Example*|
+
+
 ## Installing the Integration
 
 General installation instructions for integrations are provided on the [PolarityIO GitHub Page](https://polarityio.github.io/).
