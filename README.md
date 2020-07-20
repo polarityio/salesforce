@@ -96,11 +96,9 @@ The username for the individual user that is connecting to Salesforce.
 
 The password for the provided `username`.
 
-### Blacklist Domains
+### Ignored List
 
-A comma delimited list of domains to ignore when sending emails to Salesforce for lookup.  As an example,
-if your companies email addresses are `company.com` you can ignore all of these email addresses by setting
-this options's value to `company.com`.  Any emails ending in `company.com` will no longer be searched in Salesforce.
+A comma delimited list of domains to ignore when sending emails to Salesforce for lookup.  As an example, if your companies email addresses are `company.com` you can ignore all of these email addresses by setting this options's value to `company.com`.  Any emails ending in `company.com` will no longer be searched in Salesforce.
 
 ## Polarity
 

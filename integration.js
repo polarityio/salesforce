@@ -19,15 +19,15 @@ function isValidEmail(email) {
 }
 
 function doLookup(entities, options, cb) {
-  let blacklistDomains = [];
-  if (options.blacklist.length > 0) {
-    blacklistDomains = options.blacklist.split(',');
+  let blocklistDomains = [];
+  if (options.blocklist.length > 0) {
+    blocklistDomains = options.blocklist.split(',');
   }
 
   entities = entities.reduce((accum, entity) => {
     if (isValidEmail(entity.value)) {
-      if (blacklistDomains.length > 0) {
-        let result = blacklistDomains.find((domain) => {
+      if (blocklistDomains.length > 0) {
+        let result = blocklistDomains.find((domain) => {
           return entity.value.endsWith(domain.trim());
         });
 
@@ -44,7 +44,7 @@ function doLookup(entities, options, cb) {
   Logger.debug({ entities: entities }, 'Entities');
 
   if (entities.length === 0) {
-    // No valid emails (either invalid or were blacklisted)
+    // No valid emails (either invalid or were blocklisted)
     cb(null, []);
     return;
   }

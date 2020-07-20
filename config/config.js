@@ -145,8 +145,8 @@ module.exports = {
             adminOnly: false
         },
         {
-            key: "blacklist",
-            name: "Blacklist Domains",
+            key: "blocklist",
+            name: "Blocklist Domains",
             description: "Comma delimited list of domains to ignore when sending emails to Salesforce for lookup",
             default: "",
             type: "text",
