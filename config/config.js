@@ -105,8 +105,8 @@ module.exports = {
             description: "URL of the Salesforce instance to use including the schema (i.e., https://)",
             default: "",
             type: "text",
-            userCanEdit: true,
-            adminOnly: false
+            userCanEdit: false,
+            adminOnly: true
         },
         {
             key: "consumerKey",
@@ -114,8 +114,8 @@ module.exports = {
             description: "The Consumer Key for the connected app",
             default: "",
             type: "text",
-            userCanEdit: true,
-            adminOnly: false
+            userCanEdit: false,
+            adminOnly: true
         },
         {
             key: "consumerSecret",
@@ -123,8 +123,8 @@ module.exports = {
             description: "The Consumer Secret for the connected app",
             default: "",
             type: "password",
-            userCanEdit: true,
-            adminOnly: false
+            userCanEdit: false,
+            adminOnly: true
         },
         {
             key: "username",
@@ -150,7 +150,7 @@ module.exports = {
             description: "Comma delimited list of domains to ignore when sending emails to Salesforce for lookup",
             default: "",
             type: "text",
-            userCanEdit: true,
+            userCanEdit: false,
             adminOnly: false
         },
     ]
