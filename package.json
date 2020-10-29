@@ -1,7 +1,7 @@
 {
   "main": "./integration.js",
   "name": "salesforce",
-  "version": "3.3.2-beta",
+  "version": "3.3.3-beta",
   "private": true,
   "license": "MIT",
   "author": "Polarity",
