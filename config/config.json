@@ -1,0 +1,94 @@
+{
+  "name": "Salesforce",
+  "acronym": "SF",
+  "description": "The Salesforce integration provides Contact and Lead information based on email lookups",
+  "entityTypes": [
+    "email"
+  ],
+  "styles": [
+    "./styles/salesforce.less"
+  ],
+  "block": {
+    "component": {
+      "file": "./components/salesforce-block.js"
+    },
+    "template": {
+      "file": "./templates/salesforce-block.hbs"
+    }
+  },
+  "summary": {
+    "component": {
+      "file": "./components/salesforce-summary.js"
+    },
+    "template": {
+      "file": "./templates/salesforce-summary.hbs"
+    }
+  },
+  "request": {
+    "cert": "",
+    "key": "",
+    "passphrase": "",
+    "ca": "",
+    "proxy": "",
+    "rejectUnauthorized": true
+  },
+  "logging": {
+    "level": "info"
+  },
+  "options": [
+    {
+      "key": "url",
+      "name": "URL",
+      "description": "URL of the Salesforce instance to use including the schema (i.e., https://)",
+      "default": "",
+      "type": "text",
+      "userCanEdit": false,
+      "adminOnly": true
+    },
+    {
+      "key": "consumerKey",
+      "name": "Consumer Key",
+      "description": "The Consumer Key for the connected app",
+      "default": "",
+      "type": "text",
+      "userCanEdit": false,
+      "adminOnly": true
+    },
+    {
+      "key": "consumerSecret",
+      "name": "Consumer Secret",
+      "description": "The Consumer Secret for the connected app",
+      "default": "",
+      "type": "password",
+      "userCanEdit": false,
+      "adminOnly": true
+    },
+    {
+      "key": "username",
+      "name": "Username",
+      "description": "The user's username",
+      "default": "",
+      "type": "text",
+      "userCanEdit": true,
+      "adminOnly": false
+    },
+    {
+      "key": "password",
+      "name": "Password",
+      "description": "The user's password",
+      "default": "",
+      "type": "password",
+      "userCanEdit": true,
+      "adminOnly": false
+    },
+    {
+      "key": "blocklist",
+      "name": "Blocklist Domains",
+      "description": "Comma delimited list of domains to ignore when sending emails to Salesforce for lookup",
+      "default": "",
+      "type": "text",
+      "userCanEdit": false,
+      "adminOnly": false
+    }
+  ]
+}
