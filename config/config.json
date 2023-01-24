@@ -1,13 +1,10 @@
 {
   "name": "Salesforce",
   "acronym": "SF",
+  "defaultColor": "light-blue",
   "description": "The Salesforce integration provides Contact and Lead information based on email lookups",
-  "entityTypes": [
-    "email"
-  ],
-  "styles": [
-    "./styles/salesforce.less"
-  ],
+  "entityTypes": ["email"],
+  "styles": ["./styles/salesforce.less"],
   "block": {
     "component": {
       "file": "./components/salesforce-block.js"

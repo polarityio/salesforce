@@ -1,9 +1,10 @@
 const fs = require('fs');
-const request = require('request');
+const request = require('postman-request');
 const async = require('async');
 const config = require('./config/config');
 const Salesforce = require('./salesforce');
-const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const emailRegex =
+  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 let salesforce;
 let Logger;
@@ -14,11 +15,11 @@ let Logger;
  * @param email
  * @returns {boolean} True if the email is valid for lookup in salesforce
  */
-function isValidEmail(email) {
+function isValidEmail (email) {
   return emailRegex.test(String(email).toLowerCase());
 }
 
-function doLookup(entities, options, cb) {
+function doLookup (entities, options, cb) {
   let blocklistDomains = [];
   if (options.blocklist.length > 0) {
     blocklistDomains = options.blocklist.split(',');
@@ -55,10 +56,10 @@ function doLookup(entities, options, cb) {
   });
 }
 
-function _getDetails(id, isContact, options, cb) {
+function _getDetails (id, isContact, options, cb) {
   async.parallel(
     {
-      accounts: function(done) {
+      accounts: function (done) {
         if (isContact === true) {
           salesforce.getRelatedAccounts(id, options, (err, results) => {
             done(err, results);
@@ -67,12 +68,12 @@ function _getDetails(id, isContact, options, cb) {
           done(null);
         }
       },
-      tasks: function(done) {
+      tasks: function (done) {
         salesforce.getTasks(id, options, (err, results) => {
           done(err, results);
         });
       },
-      opportunities: function(done) {
+      opportunities: function (done) {
         if (isContact === true) {
           salesforce.getOpportunities(id, options, (err, results) => {
             done(err, results);
@@ -81,7 +82,7 @@ function _getDetails(id, isContact, options, cb) {
           done(null);
         }
       },
-      campaigns: function(done) {
+      campaigns: function (done) {
         if (isContact === true) {
           salesforce.getCampaignsByContact(id, options, (err, results) => {
             done(err, results);
@@ -97,10 +98,10 @@ function _getDetails(id, isContact, options, cb) {
   );
 }
 
-function onDetails(lookupObject, options, cb) {
+function onDetails (lookupObject, options, cb) {
   async.waterfall(
     [
-      function getContactDetails(done) {
+      function getContactDetails (done) {
         async.each(
           lookupObject.data.details.contacts,
           (contact, next) => {
@@ -115,7 +116,7 @@ function onDetails(lookupObject, options, cb) {
           done
         );
       },
-      function getLeadDetails(done) {
+      function getLeadDetails (done) {
         async.each(
           lookupObject.data.details.leads,
           (lead, next) => {
@@ -129,14 +130,14 @@ function onDetails(lookupObject, options, cb) {
         );
       }
     ],
-    function(err) {
+    function (err) {
       Logger.debug({ lookupObject: lookupObject }, 'onDetails');
       cb(err, lookupObject.data);
     }
   );
 }
 
-function onMessage(payload, options, cb) {
+function onMessage (payload, options, cb) {
   Logger.debug({ payload: payload, options: options }, 'Received onMessage');
   switch (payload.action) {
     case 'GET_SIMILAR_OPP':
@@ -147,7 +148,7 @@ function onMessage(payload, options, cb) {
   }
 }
 
-function startup(logger) {
+function startup (logger) {
   Logger = logger;
   let requestOptions = {};
 
@@ -179,7 +180,7 @@ function startup(logger) {
   salesforce = new Salesforce(requestWithDefaults, logger);
 }
 
-function validateOption(errors, options, optionName, errMessage) {
+function validateOption (errors, options, optionName, errMessage) {
   if (
     !options[optionName] ||
     typeof options[optionName].value !== 'string' ||
@@ -192,7 +193,7 @@ function validateOption(errors, options, optionName, errMessage) {
   }
 }
 
-function validateCanLogin(options, callback) {
+function validateCanLogin (options, callback) {
   let opts = {};
   for (let k in options) {
     opts[k] = options[k].value;
@@ -207,7 +208,7 @@ function validateCanLogin(options, callback) {
   });
 }
 
-function validateOptions(options, callback) {
+function validateOptions (options, callback) {
   Logger.trace('Options to validate', options);
 
   let errors = [];
