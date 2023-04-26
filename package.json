@@ -1,6 +1,6 @@
 {
   "name": "salesforce",
-  "version": "3.3.5-beta",
+  "version": "3.3.6",
   "main": "./integration.js",
   "private": true,
   "license": "MIT",
