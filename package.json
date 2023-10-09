@@ -1,23 +1,14 @@
 {
   "name": "salesforce",
-  "version": "3.3.7",
+  "version": "3.3.8",
   "main": "./integration.js",
   "private": true,
   "license": "MIT",
   "author": "Polarity",
   "dependencies": {
-    "async": "^3.2.0",
-    "lodash": "~4.17.19",
+    "async": "^3.2.4",
+    "lodash": "^4.17.21",
     "postman-request": "^2.88.1-postman.32"
-  },
-  "devDependencies": {
-    "bunyan": "^1.8.12",
-    "chai": "~3.5",
-    "mocha": "~3.2",
-    "mountebank": "^1.14.0",
-    "node-ssh": "^5.1.1",
-    "node-watch": "^0.5.8",
-    "scp2": "^0.5.0"
   },
   "scripts": {
     "pretest": "mb start --configfile imposters.json &",
